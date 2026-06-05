@@ -232,7 +232,7 @@ def apply_all(df):
     if client_sel:
         f = f[f["company_name"].isin(client_sel)]
     if exit_type_sel:
-        f = f[f["company_name"].isin(exit_type_sel)]
+        f = f[f["Exit Type"].isin(exit_type_sel)]
     if month_sel:
         f = f[f["Month"].isin(month_sel)]
     return f

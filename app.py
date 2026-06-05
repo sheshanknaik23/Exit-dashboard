@@ -7,7 +7,7 @@ import warnings, shutil, tempfile, os
 import requests
 import io
 
-/* warnings.filterwarnings("ignore") */
+warnings.filterwarnings("ignore")
 
 # ── employee_type mapping ──
 EMP_TYPE_MAP = {1:"Contractor", 2:"Permanent", 4:"Intern", 6:"Contract Staff", 7:"Consultant"}

@@ -108,7 +108,7 @@ def msort(m):
         return int(p[1])*100 + MO.get(p[0][:3], 0)
     except: return 0
 
-FILE_PATH = r"C:\Users\E36250348\OneDrive - JoulestoWatts Business Solutions Pvt Ltd\Desktop\Exit Dashboard\Exit & Exit Pip.xlsx"
+FILE_PATH = "Exit & Exit Pip.xlsx"
 
 @st.cache_data(ttl=300)
 def load_data(path):

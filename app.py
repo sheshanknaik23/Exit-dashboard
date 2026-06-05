@@ -3,8 +3,6 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import warnings, shutil, tempfile, os
-import requests
-import io
 warnings.filterwarnings("ignore")
 
 # ── employee_type mapping ──
@@ -20,42 +18,6 @@ st.markdown("""
 .stApp { background: #0e1525 !important; }
 .block-container { padding: 1.5rem 2rem 3rem 2rem !important; max-width: 100% !important; }
 
-/* ── Sidebar toggle button — always visible ── */
-[data-testid="collapsedControl"] {
-    display: flex !important;
-    visibility: visible !important;
-    background: #1e3250 !important;
-    border: 2px solid #3b82f6 !important;
-    border-radius: 50% !important;
-    width: 36px !important;
-    height: 36px !important;
-    align-items: center !important;
-    justify-content: center !important;
-    top: 50% !important;
-    box-shadow: 0 0 12px rgba(59,130,246,0.5) !important;
-    z-index: 999 !important;
-}
-[data-testid="collapsedControl"]:hover {
-    background: #2d5aa0 !important;
-    box-shadow: 0 0 18px rgba(59,130,246,0.8) !important;
-}
-[data-testid="collapsedControl"] svg {
-    fill: #60a5fa !important;
-    width: 18px !important;
-    height: 18px !important;
-}
-
-/* ── Sidebar collapse button (inside sidebar) ── */
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] {
-    background: #1e3250 !important;
-    border: 1px solid #3b82f6 !important;
-    border-radius: 50% !important;
-    color: #60a5fa !important;
-}
-[data-testid="stSidebar"] [data-testid="stSidebarCollapseButton"] svg {
-    fill: #60a5fa !important;
-}
-
 /* Sidebar */
 [data-testid="stSidebar"] { background: #152033 !important; border-right: 1px solid #2a3f5f !important; }
 [data-testid="stSidebar"] label,
@@ -70,8 +32,12 @@ st.markdown("""
 [data-testid="stSidebar"] [data-baseweb="select"] input { color: #ffffff !important; }
 [data-testid="stSidebar"] [data-baseweb="select"] input::placeholder { color: #94a3b8 !important; opacity: 1 !important; }
 [data-testid="stSidebar"] [data-baseweb="select"] [data-testid="stMarkdownContainer"] { color: #ffffff !important; }
+
+/* Placeholder "All" text */
 [data-testid="stSidebar"] [data-baseweb="select"] div[aria-placeholder],
 [data-testid="stSidebar"] [data-baseweb="select"] span[aria-placeholder] { color: #94a3b8 !important; }
+
+/* The "All" placeholder inside the select box */
 [data-testid="stSidebar"] [data-baseweb="select"] > div > div > div { color: #ffffff !important; }
 
 /* Dropdown option list */
@@ -136,91 +102,9 @@ button[data-baseweb="tab"][aria-selected="true"] { color: #60a5fa !important; bo
 .live-badge { background:#052e16; border:1px solid #16a34a; color:#4ade80; font-size:10px; font-weight:700; padding:5px 14px; border-radius:20px; letter-spacing:2px; }
 .op-sign { display:flex; align-items:center; justify-content:center; height:128px; font-size:36px; color:#2d4a6a; font-weight:300; }
 
-/* Keyboard shortcut hint */
-.sidebar-hint {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    background: #1e3250;
-    border: 1px solid #2a4a7f;
-    border-radius: 8px;
-    padding: 6px 12px;
-    font-size: 11px;
-    color: #60a5fa;
-    z-index: 998;
-    display: flex;
-    align-items: center;
-    gap: 6px;
-}
-.kbd {
-    background: #0e1525;
-    border: 1px solid #3b82f6;
-    border-radius: 4px;
-    padding: 1px 6px;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 11px;
-    color: #93c5fd;
-}
-
 #MainMenu, footer, header[data-testid="stHeader"] { visibility:hidden; }
-
-/* Toggle button */
-div[data-testid="stButton"] > button {
-    background: #1e3250 !important;
-    border: 1px solid #3b82f6 !important;
-    color: #60a5fa !important;
-    font-weight: 600 !important;
-    font-size: 12px !important;
-    border-radius: 8px !important;
-    padding: 6px 16px !important;
-    letter-spacing: 0.5px !important;
-    transition: all 0.2s !important;
-}
-div[data-testid="stButton"] > button:hover {
-    background: #2d5aa0 !important;
-    color: #ffffff !important;
-    border-color: #60a5fa !important;
-    box-shadow: 0 0 10px rgba(59,130,246,0.4) !important;
-}
 </style>
 """, unsafe_allow_html=True)
-
-# ── Working Sidebar Toggle ──
-if "sidebar_open" not in st.session_state:
-    st.session_state.sidebar_open = True
-
-def toggle_sidebar():
-    st.session_state.sidebar_open = not st.session_state.sidebar_open
-
-# Inject JS to actually collapse/expand the sidebar
-if st.session_state.sidebar_open:
-    btn_label = "◀  Hide Filters"
-    sidebar_js = ""
-else:
-    btn_label = "▶  Show Filters"
-    sidebar_js = """
-    <script>
-    const btn = window.parent.document.querySelector('[data-testid="collapsedControl"]');
-    if(btn) btn.click();
-    </script>
-    """
-
-st.markdown(f"""
-<style>
-.toggle-btn-wrap {{
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: -10px;
-    margin-top: 4px;
-}}
-</style>
-<div class="toggle-btn-wrap">{sidebar_js}</div>
-""", unsafe_allow_html=True)
-
-col_t, col_s = st.columns([0.15, 0.85])
-with col_t:
-    st.button(btn_label, on_click=toggle_sidebar,
-              help="Click to show/hide the filters panel")
 
 PALETTE = ["#60a5fa","#34d399","#fb923c","#f472b6","#a78bfa","#38bdf8","#facc15","#f87171","#86efac","#c4b5fd"]
 
@@ -249,14 +133,13 @@ def msort(m):
         return int(p[1])*100 + MO.get(p[0][:3], 0)
     except: return 0
 
-FILE_PATH = "https://j2w-my.sharepoint.com/:x:/g/personal/sheshank_suresh_joulestowatts_com/IQAbN1Juu0wxQaQeQrs_ALpaAf5cbpmso_hp1POy6u9adds?download=1"
+FILE_PATH = r"C:\Users\E36250348\OneDrive - JoulestoWatts Business Solutions Pvt Ltd\Desktop\Exit Dashboard\Exit & Exit Pip.xlsx"
 
 @st.cache_data(ttl=300)
 def load_data(path):
-    response = requests.get(path)
-    response.raise_for_status()
-    excel_data = io.BytesIO(response.content)
-    xl = pd.ExcelFile(excel_data)
+    tmp = os.path.join(tempfile.gettempdir(), "exit_dash_tmp.xlsx")
+    shutil.copy2(path, tmp)
+    xl = pd.ExcelFile(tmp)
 
     exit_df = xl.parse("Exit")
     pipe_df = xl.parse("Exit Pipeline")
@@ -278,12 +161,16 @@ def load_data(path):
             df["Business Head"] = df.get("BH", pd.NA)
         if "Domain" not in df.columns:
             df["Domain"] = pd.NA
+
+        # Map employee_type number → label
         df["employee_type"] = df["employee_type"].map(EMP_TYPE_MAP).fillna(df["employee_type"].astype(str))
+
         df["p_o_value"] = pd.to_numeric(df["p_o_value"], errors="coerce").fillna(0)
         df["margin"]    = pd.to_numeric(df["margin"],    errors="coerce").fillna(0)
         df["Month"]     = df["Month"].astype(str).str.strip()
         df["exit_type"] = df["exit_type"].astype(str).str.strip()
 
+    # Clean dates — date only, no time
     exit_df["last_work_day"]  = pd.to_datetime(exit_df["last_work_day"], errors="coerce").dt.date
     exit_df["joining_date"]   = pd.to_datetime(exit_df["joining_date"],  errors="coerce").dt.date
     pipe_df["tentative_exit_date"] = pd.to_datetime(pipe_df["tentative_exit_date"], errors="coerce").dt.date
@@ -297,10 +184,7 @@ except FileNotFoundError:
 except Exception as e:
     st.error(f"❌ Error loading file: {e}"); st.stop()
 
-# ── SIDEBAR ──
-if st.session_state.sidebar_open:
- pass  # sidebar always renders in Streamlit, controlled by toggle JS above
-
+# ── SIDEBAR CASCADING FILTERS ──
 with st.sidebar:
     st.markdown("### ⚡ EXIT ANALYTICS")
     st.markdown("---")
@@ -330,20 +214,11 @@ with st.sidebar:
     if st.button("🔄  Refresh Data", use_container_width=True):
         st.cache_data.clear(); st.rerun()
 
-    st.markdown("""
-    <div style="margin-top:1.5rem;padding:12px 14px;background:#0e1525;border-radius:10px;border:1px solid #1e2d45;">
+    st.markdown("""<div style="margin-top:1.5rem;padding:12px 14px;background:#0e1525;border-radius:10px;border:1px solid #1e2d45;">
         <div style="font-size:10px;color:#334155;letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-bottom:5px;">Data Source</div>
         <div style="font-size:11px;color:#60a5fa;font-weight:500;">Exit & Exit Pip.xlsx</div>
         <div style="font-size:10px;color:#334155;margin-top:3px;">Refreshes every 5 min</div>
-    </div>
-    <div style="margin-top:1rem;padding:10px 14px;background:#0e1525;border-radius:10px;border:1px solid #1e2d45;text-align:center;">
-        <div style="font-size:10px;color:#475569;margin-bottom:4px;">Toggle Sidebar</div>
-        <div style="display:inline-block;background:#1e3250;border:1px solid #3b82f6;border-radius:6px;
-             padding:3px 10px;font-family:'JetBrains Mono',monospace;font-size:13px;color:#60a5fa;font-weight:700;">
-            [ &nbsp; key
-        </div>
-    </div>
-    """, unsafe_allow_html=True)
+    </div>""", unsafe_allow_html=True)
 
 def apply_all(df):
     f = df.copy()
@@ -356,7 +231,8 @@ def apply_all(df):
 ef = apply_all(exit_df)
 pf = apply_all(pipe_df)
 
-exit_hc  = len(ef);               pipe_hc  = len(pf);               proj_hc  = exit_hc + pipe_hc
+# ── METRICS ──
+exit_hc  = len(ef);           pipe_hc  = len(pf);           proj_hc  = exit_hc + pipe_hc
 exit_po  = ef["p_o_value"].sum(); pipe_po  = pf["p_o_value"].sum(); proj_po  = exit_po + pipe_po
 exit_mar = ef["margin"].sum();    pipe_mar = pf["margin"].sum();    proj_mar = exit_mar + pipe_mar
 
@@ -369,9 +245,12 @@ st.markdown("""<div class="pg-hdr">
     <span class="live-badge">● LIVE</span>
 </div>""", unsafe_allow_html=True)
 
-# ══ ROW 1 — HEADCOUNT ══
+# ══════════════════════════════════════
+# ROW 1 — HEADCOUNT
+# ══════════════════════════════════════
 sec("HEADCOUNT OVERVIEW", "#60a5fa")
 h1,h2,h3,h4,h5 = st.columns([1,0.12,1,0.12,1])
+
 with h1:
     st.markdown(f"""<div class="kpi-main" style="background:linear-gradient(135deg,#1a3a6b,#1e4080);border:1px solid #2d5aa0;">
         <div class="top-bar" style="background:linear-gradient(90deg,#60a5fa,#3b82f6);"></div>
@@ -380,8 +259,10 @@ with h1:
         <div class="kpi-value">{exit_hc:,}</div>
         <div class="kpi-sub" style="color:#93c5fd;">Confirmed exits</div>
     </div>""", unsafe_allow_html=True)
+
 with h2:
     st.markdown('<div class="op-sign">+</div>', unsafe_allow_html=True)
+
 with h3:
     st.markdown(f"""<div class="kpi-main" style="background:linear-gradient(135deg,#7c2d12,#9a3412);border:1px solid #c2410c;">
         <div class="top-bar" style="background:linear-gradient(90deg,#fb923c,#f97316);"></div>
@@ -390,8 +271,10 @@ with h3:
         <div class="kpi-value">{pipe_hc:,}</div>
         <div class="kpi-sub" style="color:#fdba74;">At-risk headcount</div>
     </div>""", unsafe_allow_html=True)
+
 with h4:
     st.markdown('<div class="op-sign">=</div>', unsafe_allow_html=True)
+
 with h5:
     st.markdown(f"""<div class="kpi-main" style="background:linear-gradient(135deg,#064e3b,#065f46);border:1px solid #059669;">
         <div class="top-bar" style="background:linear-gradient(90deg,#34d399,#10b981);"></div>
@@ -403,9 +286,12 @@ with h5:
 
 st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
 
-# ══ ROW 2 — P.O VALUE ══
+# ══════════════════════════════════════
+# ROW 2 — P.O VALUE
+# ══════════════════════════════════════
 sec("P.O VALUE & MARGIN OVERVIEW", "#a78bfa")
 p1,p2,p3,p4,p5 = st.columns([1,0.12,1,0.12,1])
+
 with p1:
     st.markdown(f"""<div class="kpi-main" style="background:linear-gradient(135deg,#1a3a6b,#1e4080);border:1px solid #2d5aa0;">
         <div class="top-bar" style="background:linear-gradient(90deg,#60a5fa,#3b82f6);"></div>
@@ -414,8 +300,10 @@ with p1:
         <div class="kpi-value" style="font-size:22px;">₹{exit_po:,.0f}</div>
         <div class="kpi-sub" style="color:#93c5fd;">Margin &nbsp;₹{exit_mar:,.0f}</div>
     </div>""", unsafe_allow_html=True)
+
 with p2:
     st.markdown('<div class="op-sign">+</div>', unsafe_allow_html=True)
+
 with p3:
     st.markdown(f"""<div class="kpi-main" style="background:linear-gradient(135deg,#7c2d12,#9a3412);border:1px solid #c2410c;">
         <div class="top-bar" style="background:linear-gradient(90deg,#fb923c,#f97316);"></div>
@@ -424,8 +312,10 @@ with p3:
         <div class="kpi-value" style="font-size:22px;">₹{pipe_po:,.0f}</div>
         <div class="kpi-sub" style="color:#fdba74;">Margin &nbsp;₹{pipe_mar:,.0f}</div>
     </div>""", unsafe_allow_html=True)
+
 with p4:
     st.markdown('<div class="op-sign">=</div>', unsafe_allow_html=True)
+
 with p5:
     st.markdown(f"""<div class="kpi-main" style="background:linear-gradient(135deg,#2e1065,#3b0764);border:1px solid #7c3aed;">
         <div class="top-bar" style="background:linear-gradient(90deg,#a78bfa,#8b5cf6);"></div>
@@ -437,7 +327,9 @@ with p5:
 
 st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
-# ══ CLIENT WISE ══
+# ══════════════════════════════════════
+# CLIENT WISE
+# ══════════════════════════════════════
 sec("CLIENT WISE ANALYSIS", "#38bdf8")
 cc1, cc2 = st.columns(2)
 with cc1:
@@ -451,19 +343,23 @@ with cc1:
     fig.update_xaxes(showticklabels=False)
     st.plotly_chart(fig, use_container_width=True, config={"displayModeBar":False})
     st.markdown('</div>', unsafe_allow_html=True)
+
 with cc2:
     st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
     top_po_c = ef.groupby("company_name")["p_o_value"].sum().reset_index(name="PO").sort_values("PO").tail(12)
     fig2 = go.Figure(go.Bar(x=top_po_c["PO"], y=top_po_c["company_name"], orientation="h",
         marker=dict(color="#8b5cf6", opacity=0.9, line=dict(width=0)),
-        text=[f"₹{v/1e5:.1f}L" for v in top_po_c["PO"]], textposition="outside",
+        text=[f"₹{v/1e5:.1f}L" for v in top_po_c["PO"]],
+        textposition="outside",
         textfont=dict(color="#c4b5fd", size=11, family="JetBrains Mono")))
     fig2.update_layout(**clayout("Top Clients · P.O Value", 390))
     fig2.update_xaxes(showticklabels=False)
     st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar":False})
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ══ BH WISE ══
+# ══════════════════════════════════════
+# BH WISE
+# ══════════════════════════════════════
 sec("BUSINESS HEAD WISE ANALYSIS", "#34d399")
 bc1, bc2, bc3 = st.columns(3)
 with bc1:
@@ -477,17 +373,20 @@ with bc1:
     fig3.update_xaxes(showticklabels=False)
     st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar":False})
     st.markdown('</div>', unsafe_allow_html=True)
+
 with bc2:
     st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
     bh_po2 = ef.groupby("Business Head")["p_o_value"].sum().reset_index(name="PO").sort_values("PO")
     fig4 = go.Figure(go.Bar(x=bh_po2["PO"], y=bh_po2["Business Head"], orientation="h",
         marker=dict(color=PALETTE[:len(bh_po2)], line=dict(width=0)),
-        text=[f"₹{v/1e5:.1f}L" for v in bh_po2["PO"]], textposition="outside",
+        text=[f"₹{v/1e5:.1f}L" for v in bh_po2["PO"]],
+        textposition="outside",
         textfont=dict(color="#e2e8f0", size=11, family="JetBrains Mono")))
     fig4.update_layout(**clayout("P.O Value by Business Head", 310))
     fig4.update_xaxes(showticklabels=False)
     st.plotly_chart(fig4, use_container_width=True, config={"displayModeBar":False})
     st.markdown('</div>', unsafe_allow_html=True)
+
 with bc3:
     st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
     bh_p = pf.groupby("Business Head").size().reset_index(name="Pipeline").sort_values("Pipeline")
@@ -500,7 +399,9 @@ with bc3:
     st.plotly_chart(fig5, use_container_width=True, config={"displayModeBar":False})
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ══ DOMAIN WISE ══
+# ══════════════════════════════════════
+# DOMAIN WISE
+# ══════════════════════════════════════
 sec("DOMAIN WISE ANALYSIS", "#fb923c")
 dc1, dc2, dc3 = st.columns(3)
 with dc1:
@@ -513,6 +414,7 @@ with dc1:
     fig6.update_layout(**clayout("Exits by Domain", 310)); fig6.update_layout(showlegend=False)
     st.plotly_chart(fig6, use_container_width=True, config={"displayModeBar":False})
     st.markdown('</div>', unsafe_allow_html=True)
+
 with dc2:
     st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
     dom_po2 = ef.groupby("Domain")["p_o_value"].sum().reset_index(name="PO").sort_values("PO", ascending=False)
@@ -523,6 +425,7 @@ with dc2:
     fig7.update_layout(**clayout("P.O Value by Domain", 310)); fig7.update_yaxes(showticklabels=False)
     st.plotly_chart(fig7, use_container_width=True, config={"displayModeBar":False})
     st.markdown('</div>', unsafe_allow_html=True)
+
 with dc3:
     st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
     dom_m = ef.groupby("Domain")["margin"].sum().reset_index(name="Margin").sort_values("Margin", ascending=False)
@@ -534,7 +437,9 @@ with dc3:
     st.plotly_chart(fig8, use_container_width=True, config={"displayModeBar":False})
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ══ EXIT TYPE + TREND ══
+# ══════════════════════════════════════
+# EXIT TYPE + TREND
+# ══════════════════════════════════════
 sec("EXIT TYPE & MONTHLY TREND", "#f472b6")
 ec1, ec2, ec3 = st.columns([1, 1, 1.4])
 with ec1:
@@ -548,6 +453,7 @@ with ec1:
     fig9.update_layout(legend=dict(orientation="v", x=1.02, y=0.5, font=dict(color="#cbd5e1", size=9), bgcolor="rgba(0,0,0,0)"))
     st.plotly_chart(fig9, use_container_width=True, config={"displayModeBar":False})
     st.markdown('</div>', unsafe_allow_html=True)
+
 with ec2:
     st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
     pt = pf["exit_type"].value_counts().reset_index(); pt.columns = ["Type","Count"]
@@ -562,6 +468,7 @@ with ec2:
     else:
         st.info("No pipeline data.")
     st.markdown('</div>', unsafe_allow_html=True)
+
 with ec3:
     st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
     trend_months = sorted(ef["Month"].dropna().unique(), key=msort)
@@ -583,52 +490,96 @@ with ec3:
     st.plotly_chart(fig11, use_container_width=True, config={"displayModeBar":False})
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ══ RAW DATA ══
+# ══════════════════════════════════════
+# RAW DATA TABLES WITH TOTALS
+# ══════════════════════════════════════
 sec("RAW DATA", "#64748b")
 tab1, tab2 = st.tabs(["  📋  Exit Records  ", "  🔄  Pipeline Records  "])
 
 EXIT_COLS_DISPLAY = {
-    "full_name":"Full Name","employee_id":"Employee ID","employee_type":"Emp Type",
-    "company_name":"Client","Domain":"Domain","Business Head":"Business Head",
-    "exit_type":"Exit Type","last_work_day":"Last Working Day",
-    "p_o_value":"P.O Value (₹)","margin":"Margin (₹)",
-    "recruiter_name":"Recruiter","manager_name":"Manager","Month":"Month",
+    "full_name":      "Full Name",
+    "employee_id":    "Employee ID",
+    "employee_type":  "Emp Type",
+    "company_name":   "Client",
+    "Domain":         "Domain",
+    "Business Head":  "Business Head",
+    "exit_type":      "Exit Type",
+    "last_work_day":  "Last Working Day",
+    "p_o_value":      "P.O Value (₹)",
+    "margin":         "Margin (₹)",
+    "recruiter_name": "Recruiter",
+    "manager_name":   "Manager",
+    "Month":          "Month",
 }
 PIPE_COLS_DISPLAY = {
-    "full_name":"Full Name","employee_id":"Employee ID","employee_type":"Emp Type",
-    "company_name":"Client","Domain":"Domain","Business Head":"Business Head",
-    "exit_type":"Exit Type","tentative_exit_date":"Tentative Exit Date",
-    "p_o_value":"P.O Value (₹)","margin":"Margin (₹)",
-    "recruiter_name":"Recruiter","manager_name":"Manager","Month":"Month",
+    "full_name":           "Full Name",
+    "employee_id":         "Employee ID",
+    "employee_type":       "Emp Type",
+    "company_name":        "Client",
+    "Domain":              "Domain",
+    "Business Head":       "Business Head",
+    "exit_type":           "Exit Type",
+    "tentative_exit_date": "Tentative Exit Date",
+    "p_o_value":           "P.O Value (₹)",
+    "margin":              "Margin (₹)",
+    "recruiter_name":      "Recruiter",
+    "manager_name":        "Manager",
+    "Month":               "Month",
 }
 
 def show_table_with_totals(df, col_map, label):
+    # Filter to available columns only
     available = {k: v for k, v in col_map.items() if k in df.columns}
-    display_df = df[list(available.keys())].copy().rename(columns=available)
+    display_df = df[list(available.keys())].copy()
+    display_df = display_df.rename(columns=available)
+
+    # Format numeric columns
     if "P.O Value (₹)" in display_df.columns:
         display_df["P.O Value (₹)"] = display_df["P.O Value (₹)"].apply(lambda x: f"₹{x:,.0f}")
     if "Margin (₹)" in display_df.columns:
         display_df["Margin (₹)"] = display_df["Margin (₹)"].apply(lambda x: f"₹{x:,.0f}")
+
+    # Show table
     st.dataframe(display_df.reset_index(drop=True), use_container_width=True, height=360)
+
+    # ── TOTALS BAR ──
     total_hc  = len(df)
     total_po  = df["p_o_value"].sum() if "p_o_value" in df.columns else 0
     total_mar = df["margin"].sum()    if "margin"    in df.columns else 0
     uniq_cli  = df["company_name"].nunique() if "company_name" in df.columns else 0
     uniq_dom  = df["Domain"].nunique()       if "Domain"       in df.columns else 0
+
     st.markdown(f"""
     <div class="totals-bar">
-        <div class="tot-item"><div class="tot-label">Total {label}</div><div class="tot-value blue">{total_hc:,} HC</div></div>
-        <div class="tot-item"><div class="tot-label">Total P.O Value</div><div class="tot-value green">₹{total_po:,.0f}</div></div>
-        <div class="tot-item"><div class="tot-label">Total Margin</div><div class="tot-value amber">₹{total_mar:,.0f}</div></div>
-        <div class="tot-item"><div class="tot-label">Unique Clients</div><div class="tot-value purple">{uniq_cli:,}</div></div>
-        <div class="tot-item"><div class="tot-label">Unique Domains</div><div class="tot-value">{uniq_dom:,}</div></div>
+        <div class="tot-item">
+            <div class="tot-label">Total {label}</div>
+            <div class="tot-value blue">{total_hc:,} &nbsp;HC</div>
+        </div>
+        <div class="tot-item">
+            <div class="tot-label">Total P.O Value</div>
+            <div class="tot-value green">₹{total_po:,.0f}</div>
+        </div>
+        <div class="tot-item">
+            <div class="tot-label">Total Margin</div>
+            <div class="tot-value amber">₹{total_mar:,.0f}</div>
+        </div>
+        <div class="tot-item">
+            <div class="tot-label">Unique Clients</div>
+            <div class="tot-value purple">{uniq_cli:,}</div>
+        </div>
+        <div class="tot-item">
+            <div class="tot-label">Unique Domains</div>
+            <div class="tot-value">{uniq_dom:,}</div>
+        </div>
     </div>""", unsafe_allow_html=True)
 
 with tab1:
     show_table_with_totals(ef, EXIT_COLS_DISPLAY, "Exits")
+
 with tab2:
     show_table_with_totals(pf, PIPE_COLS_DISPLAY, "Pipeline")
 
+# ── FOOTER ──
 st.markdown("""
 <div style="margin-top:3rem;padding:1rem 0;border-top:1px solid #1e2d45;
      display:flex;justify-content:space-between;align-items:center;">

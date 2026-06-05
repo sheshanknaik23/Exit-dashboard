@@ -4,6 +4,8 @@ import pandas as pd
 import plotly.graph_objects as go
 from plotly.subplots import make_subplots
 import warnings, shutil, tempfile, os
+import requests
+import io
 warnings.filterwarnings("ignore")
 
 # ── employee_type mapping ──
@@ -110,13 +112,14 @@ def msort(m):
     except:
         return 0
 
-FILE_PATH = r"C:\Users\E36250348\OneDrive - JoulestoWatts Business Solutions Pvt Ltd\Desktop\Exit Dashboard\Exit & Exit Pip.xlsx"
-
+FILE_PATH = "https://j2w-my.sharepoint.com/:x:/g/personal/sheshank_suresh_joulestowatts_com/IQAbN1Juu0wxQaQeQrs_ALpaAf5cbpmso_hp1POy6u9adds?download=1"
 @st.cache_data(ttl=300)
 def load_data(path):
-    tmp = os.path.join(tempfile.gettempdir(), "exit_dash_tmp.xlsx")
-    shutil.copy2(path, tmp)
-    xl = pd.ExcelFile(tmp)
+    response = requests.get(path)
+    response.raise_for_status()
+
+    excel_data = io.BytesIO(response.content)
+    xl = pd.ExcelFile(excel_data)
 
     exit_df = xl.parse("Exit")
     pipe_df = xl.parse("Exit Pipeline")

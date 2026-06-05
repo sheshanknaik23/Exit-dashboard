@@ -197,16 +197,6 @@ with st.sidebar:
     ef_cli = cli_f(ef_dom)
     pf_cli = cli_f(pf_dom)
 
-
-    exit_type_options = sorted((set(exit_df["Exit Type"].dropna()) | set(pipe_df["Exit Type"].dropna()))- {"", "nan"})
-    exit_type_sel = st.multiselect("🚪 Exit Type",exit_type_options,placeholder="All")
-
-    def exit_type_f(df):
-        return df[df["Exit Type"].isin(exit_type_sel)] if exit_type_sel else df
-
-    ef_et = exit_type_f(ef_cli)
-    pf_et = exit_type_f(pf_cli)
-
     
     month_options = sorted((set(ef_cli["Month"].dropna()) | set(pf_cli["Month"].dropna())) - {"", "nan"}, key=msort)
     month_sel = st.multiselect("📅  Month", month_options, placeholder="All")
@@ -231,8 +221,6 @@ def apply_all(df):
         f = f[f["Domain"].isin(domain_sel)]
     if client_sel:
         f = f[f["company_name"].isin(client_sel)]
-    if exit_type_sel:
-        f = f[f["Exit Type"].isin(exit_type_sel)]
     if month_sel:
         f = f[f["Month"].isin(month_sel)]
     return f

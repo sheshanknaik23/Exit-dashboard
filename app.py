@@ -163,64 +163,15 @@ button[data-baseweb="tab"][aria-selected="true"] { color: #60a5fa !important; bo
 }
 
 #MainMenu, footer, header[data-testid="stHeader"] { visibility:hidden; }
-
-/* Toggle button */
-div[data-testid="stButton"] > button {
-    background: #1e3250 !important;
-    border: 1px solid #3b82f6 !important;
-    color: #60a5fa !important;
-    font-weight: 600 !important;
-    font-size: 12px !important;
-    border-radius: 8px !important;
-    padding: 6px 16px !important;
-    letter-spacing: 0.5px !important;
-    transition: all 0.2s !important;
-}
-div[data-testid="stButton"] > button:hover {
-    background: #2d5aa0 !important;
-    color: #ffffff !important;
-    border-color: #60a5fa !important;
-    box-shadow: 0 0 10px rgba(59,130,246,0.4) !important;
-}
 </style>
 """, unsafe_allow_html=True)
 
-# ── Working Sidebar Toggle ──
-if "sidebar_open" not in st.session_state:
-    st.session_state.sidebar_open = True
-
-def toggle_sidebar():
-    st.session_state.sidebar_open = not st.session_state.sidebar_open
-
-# Inject JS to actually collapse/expand the sidebar
-if st.session_state.sidebar_open:
-    btn_label = "◀  Hide Filters"
-    sidebar_js = ""
-else:
-    btn_label = "▶  Show Filters"
-    sidebar_js = """
-    <script>
-    const btn = window.parent.document.querySelector('[data-testid="collapsedControl"]');
-    if(btn) btn.click();
-    </script>
-    """
-
-st.markdown(f"""
-<style>
-.toggle-btn-wrap {{
-    display: flex;
-    justify-content: flex-end;
-    margin-bottom: -10px;
-    margin-top: 4px;
-}}
-</style>
-<div class="toggle-btn-wrap">{sidebar_js}</div>
+# ── Keyboard shortcut hint ──
+st.markdown("""
+<div class="sidebar-hint">
+    ☰ Filters &nbsp;|&nbsp; Press <span class="kbd">[</span> to toggle sidebar
+</div>
 """, unsafe_allow_html=True)
-
-col_t, col_s = st.columns([0.15, 0.85])
-with col_t:
-    st.button(btn_label, on_click=toggle_sidebar,
-              help="Click to show/hide the filters panel")
 
 PALETTE = ["#60a5fa","#34d399","#fb923c","#f472b6","#a78bfa","#38bdf8","#facc15","#f87171","#86efac","#c4b5fd"]
 
@@ -298,9 +249,6 @@ except Exception as e:
     st.error(f"❌ Error loading file: {e}"); st.stop()
 
 # ── SIDEBAR ──
-if st.session_state.sidebar_open:
- pass  # sidebar always renders in Streamlit, controlled by toggle JS above
-
 with st.sidebar:
     st.markdown("### ⚡ EXIT ANALYTICS")
     st.markdown("---")

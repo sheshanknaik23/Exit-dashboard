@@ -5,7 +5,6 @@ from plotly.subplots import make_subplots
 import warnings, shutil, tempfile, os
 import requests
 import io
-initial_sidebar_state="expanded" 
 warnings.filterwarnings("ignore")
 
 # ── employee_type mapping ──

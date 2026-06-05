@@ -192,18 +192,6 @@ if "sidebar_open" not in st.session_state:
 def toggle_sidebar():
     st.session_state.sidebar_open = not st.session_state.sidebar_open
 
-# Inject JS to actually collapse/expand the sidebar
-if st.session_state.sidebar_open:
-    btn_label = "◀  Hide Filters"
-    sidebar_js = ""
-else:
-    btn_label = "▶  Show Filters"
-    sidebar_js = """
-    <script>
-    const btn = window.parent.document.querySelector('[data-testid="collapsedControl"]');
-    if(btn) btn.click();
-    </script>
-    """
 
 st.markdown(f"""
 <style>

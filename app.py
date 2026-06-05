@@ -10,7 +10,7 @@ warnings.filterwarnings("ignore")
 # ── employee_type mapping ──
 EMP_TYPE_MAP = {1:"Contractor", 2:"Permanent", 4:"Intern", 6:"Contract Staff", 7:"Consultant"}
 
-st.set_page_config(page_title="Exit Analytics · JoulestoWatts", page_icon="⚡", layout="wide", initial_sidebar_state="expanded")
+st.set_page_config(page_title="Exit Analytics · JoulestoWatts", page_icon="⚡", layout="wide")
 
 st.markdown("""
 <style>

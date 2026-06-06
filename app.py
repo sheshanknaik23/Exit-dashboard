@@ -35,14 +35,13 @@ st.markdown("""
 [data-baseweb="menu"] { background: #1e3250 !important; border: 1px solid #2a4a7f !important; }
 [data-baseweb="menu"] li { color: #ffffff !important; }
 [data-baseweb="menu"] li:hover { background: #1e4080 !important; }
-
-/* Date input */
-[data-testid="stSidebar"] [data-testid="stDateInput"] input { background: #1e3250 !important; border-color: #2a4a7f !important; color: #ffffff !important; border-radius: 8px !important; }
-[data-testid="stSidebar"] [data-testid="stDateInput"] label { color: #ffffff !important; }
+[data-testid="stSidebar"] input[type="date"] { background: #1e3250 !important; color: #ffffff !important; border-color: #2a4a7f !important; border-radius:6px !important; }
+[data-testid="stDateInput"] input { background: #1e3250 !important; color: #ffffff !important; border-color: #2a4a7f !important; }
 
 button[data-baseweb="tab"] { color: #64748b !important; font-weight: 500 !important; font-size:13px !important;}
 button[data-baseweb="tab"][aria-selected="true"] { color: #60a5fa !important; border-bottom-color: #60a5fa !important; font-weight: 700 !important; }
 
+/* KPI Cards Row 1 & 2 */
 .kpi-main { border-radius: 16px; padding: 22px 22px 18px 22px; position: relative; overflow: hidden; height: 128px; }
 .kpi-main .top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 16px 16px 0 0; }
 .kpi-main .kpi-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
@@ -50,14 +49,20 @@ button[data-baseweb="tab"][aria-selected="true"] { color: #60a5fa !important; bo
 .kpi-main .kpi-sub  { font-size: 11px; margin-top: 8px; }
 .kpi-main .kpi-icon { position: absolute; top: 20px; right: 20px; font-size: 22px; opacity: 0.18; }
 
-/* Today KPI card */
-.kpi-today { border-radius: 14px; padding: 18px 20px; position: relative; overflow: hidden;
-    background: linear-gradient(135deg,#1a2a1a,#1a3a1a); border: 1px solid #16a34a; }
-.kpi-today .top-bar { position: absolute; top: 0; left: 0; right: 0; height: 3px;
-    background: linear-gradient(90deg,#4ade80,#16a34a); border-radius: 14px 14px 0 0; }
-.kpi-today .label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; color: #4ade80; margin-bottom: 8px; }
-.kpi-today .value { font-family: 'JetBrains Mono', monospace; font-size: 26px; font-weight: 700; color: #ffffff; }
-.kpi-today .sub   { font-size: 11px; color: #86efac; margin-top: 6px; }
+/* Created Cards Row 3 */
+.kpi-created {
+    border-radius: 14px;
+    padding: 18px 20px 16px 20px;
+    position: relative;
+    overflow: hidden;
+    border: 1px solid #243450;
+    background: #162032;
+}
+.kpi-created .top-bar { position: absolute; top:0; left:0; right:0; height:3px; border-radius:14px 14px 0 0; }
+.kpi-created .label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
+.kpi-created .hc { font-family:'JetBrains Mono',monospace; font-size:28px; font-weight:700; color:#ffffff; line-height:1; }
+.kpi-created .po { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; margin-top:6px; }
+.kpi-created .date-range { font-size:10px; color:#475569; margin-top:4px; }
 
 .sec-hdr { display:flex; align-items:center; gap:10px; margin:2.2rem 0 0.9rem 0; }
 .sec-hdr-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
@@ -82,10 +87,6 @@ button[data-baseweb="tab"][aria-selected="true"] { color: #60a5fa !important; bo
 .pg-sub { font-size:11px; color:#475569; margin-top:4px; letter-spacing:1.5px; text-transform:uppercase; }
 .live-badge { background:#052e16; border:1px solid #16a34a; color:#4ade80; font-size:10px; font-weight:700; padding:5px 14px; border-radius:20px; letter-spacing:2px; }
 .op-sign { display:flex; align-items:center; justify-content:center; height:128px; font-size:36px; color:#2d4a6a; font-weight:300; }
-
-/* Date filter section in sidebar */
-.date-section { background:#0e1525; border:1px solid #1e2d45; border-radius:10px; padding:12px 14px; margin-top:8px; }
-.date-section-title { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#60a5fa; margin-bottom:10px; }
 
 #MainMenu, footer, header[data-testid="stHeader"] { visibility:hidden; }
 </style>
@@ -125,20 +126,15 @@ def load_data(path):
     response = requests.get(path)
     response.raise_for_status()
     xl = pd.ExcelFile(io.BytesIO(response.content))
-
     exit_df = xl.parse("Exit")
     pipe_df = xl.parse("Exit Pipeline")
     org_df  = xl.parse("Org Mapping")
-
     for df in [exit_df, pipe_df, org_df]:
         df.columns = df.columns.str.strip()
-
     org_df["Domain"] = org_df["Domain"].str.strip().str.title()
     org_slim = org_df[["Client","Domain","Business Head"]].drop_duplicates("Client")
-
     exit_df = exit_df.merge(org_slim, left_on="company_name", right_on="Client", how="left", suffixes=("","_org"))
     pipe_df = pipe_df.merge(org_slim, left_on="company_name", right_on="Client", how="left", suffixes=("","_org"))
-
     for df in [exit_df, pipe_df]:
         if "Business Head" in df.columns:
             df["Business Head"] = df["Business Head"].fillna(df.get("BH",""))
@@ -151,20 +147,23 @@ def load_data(path):
         df["margin"]    = pd.to_numeric(df["margin"],    errors="coerce").fillna(0)
         df["Month"]     = df["Month"].astype(str).str.strip()
         df["exit_type"] = df["exit_type"].astype(str).str.strip()
-        # Parse created_at as datetime (keep full datetime for date filtering)
         df["created_at"] = pd.to_datetime(df["created_at"], errors="coerce")
-        df["created_date"] = df["created_at"].dt.date  # date only for display
-
+        df["created_date"] = df["created_at"].dt.date
     exit_df["last_work_day"]       = pd.to_datetime(exit_df["last_work_day"], errors="coerce").dt.date
     exit_df["joining_date"]        = pd.to_datetime(exit_df["joining_date"],  errors="coerce").dt.date
     pipe_df["tentative_exit_date"] = pd.to_datetime(pipe_df["tentative_exit_date"], errors="coerce").dt.date
-
     return exit_df, pipe_df, org_df
 
 try:
     exit_df, pipe_df, org_df = load_data(FILE_PATH)
 except Exception as e:
     st.error(f"❌ Error loading file: {e}"); st.stop()
+
+# date ranges for created_at
+exit_min_date = exit_df["created_at"].dropna().dt.date.min()
+exit_max_date = exit_df["created_at"].dropna().dt.date.max()
+pipe_min_date = pipe_df["created_at"].dropna().dt.date.min()
+pipe_max_date = pipe_df["created_at"].dropna().dt.date.max()
 
 # ─────────────────────────────────────────────
 # SIDEBAR
@@ -173,22 +172,19 @@ with st.sidebar:
     st.markdown("### ⚡ EXIT ANALYTICS")
     st.markdown("---")
 
-    # ── Cascading filters ──
+    # ── Main cascading filters ──
     bh_options = sorted((set(exit_df["Business Head"].dropna()) | set(pipe_df["Business Head"].dropna())) - {"","nan"})
     bh_sel = st.multiselect("👤  Business Head", bh_options, placeholder="All")
-
     def bh_f(df): return df[df["Business Head"].isin(bh_sel)] if bh_sel else df
     ef_bh = bh_f(exit_df); pf_bh = bh_f(pipe_df)
 
     domain_options = sorted((set(ef_bh["Domain"].dropna()) | set(pf_bh["Domain"].dropna())) - {"","nan"})
     domain_sel = st.multiselect("🏢  Domain", domain_options, placeholder="All")
-
     def dom_f(df): return df[df["Domain"].isin(domain_sel)] if domain_sel else df
     ef_dom = dom_f(ef_bh); pf_dom = dom_f(pf_bh)
 
     client_options = sorted((set(ef_dom["company_name"].dropna()) | set(pf_dom["company_name"].dropna())) - {"","nan"})
     client_sel = st.multiselect("🏭  Client", client_options, placeholder="All")
-
     def cli_f(df): return df[df["company_name"].isin(client_sel)] if client_sel else df
     ef_cli = cli_f(ef_dom); pf_cli = cli_f(pf_dom)
 
@@ -198,85 +194,48 @@ with st.sidebar:
     month_options = sorted((set(ef_cli["Month"].dropna()) | set(pf_cli["Month"].dropna())) - {"","nan"}, key=msort)
     month_sel = st.multiselect("📅  Month", month_options, placeholder="All")
 
-    # ── Created At Date Filter ──
     st.markdown("---")
-    st.markdown("<div style='font-size:10px;font-weight:700;letter-spacing:2px;text-transform:uppercase;color:#60a5fa;margin-bottom:8px;'>📆 CREATED DATE FILTER</div>", unsafe_allow_html=True)
 
-    # Get min/max created_at across both sheets
-    all_dates = pd.concat([
-        exit_df["created_at"].dropna(),
-        pipe_df["created_at"].dropna()
-    ])
-    min_date = all_dates.min().date()
-    max_date = all_dates.max().date()
-    today    = date.today()
+    # ── Exit Created Date Filter ──
+    st.markdown("<div style='font-size:10px;font-weight:700;letter-spacing:2px;color:#60a5fa;margin-bottom:6px;'>📆 EXIT CREATED DATE</div>", unsafe_allow_html=True)
+    exit_date_from = st.date_input("Exit From", value=exit_min_date, min_value=exit_min_date, max_value=exit_max_date, key="exit_from")
+    exit_date_to   = st.date_input("Exit To",   value=exit_max_date, min_value=exit_min_date, max_value=exit_max_date, key="exit_to")
 
-    # Quick buttons for common date ranges
-    quick_col1, quick_col2 = st.columns(2)
-    with quick_col1:
-        if st.button("Today", use_container_width=True):
-            st.session_state["date_from"] = today
-            st.session_state["date_to"]   = today
-    with quick_col2:
-        if st.button("This Week", use_container_width=True):
-            st.session_state["date_from"] = today - timedelta(days=today.weekday())
-            st.session_state["date_to"]   = today
+    st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
 
-    q2, q3 = st.columns(2)
-    with q2:
-        if st.button("This Month", use_container_width=True):
-            st.session_state["date_from"] = today.replace(day=1)
-            st.session_state["date_to"]   = today
-    with q3:
-        if st.button("All Time", use_container_width=True):
-            st.session_state["date_from"] = min_date
-            st.session_state["date_to"]   = max_date
-
-    # Initialise session state defaults
-    if "date_from" not in st.session_state:
-        st.session_state["date_from"] = min_date
-    if "date_to" not in st.session_state:
-        st.session_state["date_to"] = max_date
-
-    date_from = st.date_input("From", value=st.session_state["date_from"],
-                               min_value=min_date, max_value=max_date, key="date_from")
-    date_to   = st.date_input("To",   value=st.session_state["date_to"],
-                               min_value=min_date, max_value=max_date, key="date_to")
+    # ── Pipeline Created Date Filter ──
+    st.markdown("<div style='font-size:10px;font-weight:700;letter-spacing:2px;color:#fb923c;margin-bottom:6px;'>📆 PIPELINE CREATED DATE</div>", unsafe_allow_html=True)
+    pipe_date_from = st.date_input("Pipeline From", value=pipe_min_date, min_value=pipe_min_date, max_value=pipe_max_date, key="pipe_from")
+    pipe_date_to   = st.date_input("Pipeline To",   value=pipe_max_date, min_value=pipe_min_date, max_value=pipe_max_date, key="pipe_to")
 
     st.markdown("---")
     if st.button("🔄  Refresh Data", use_container_width=True):
         st.cache_data.clear(); st.rerun()
 
-    st.markdown("""
-    <div style="margin-top:1rem;padding:12px 14px;background:#0e1525;border-radius:10px;border:1px solid #1e2d45;">
+    st.markdown("""<div style="margin-top:1rem;padding:12px 14px;background:#0e1525;border-radius:10px;border:1px solid #1e2d45;">
         <div style="font-size:10px;color:#334155;letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-bottom:5px;">Data Source</div>
         <div style="font-size:11px;color:#60a5fa;font-weight:500;">Exit & Exit Pip.xlsx</div>
         <div style="font-size:10px;color:#334155;margin-top:3px;">Refreshes every 5 min</div>
     </div>""", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
-# APPLY ALL FILTERS including created_at date range
+# APPLY FILTERS
 # ─────────────────────────────────────────────
-def apply_all(df):
+def apply_main(df):
     f = df.copy()
-    if bh_sel:          f = f[f["Business Head"].isin(bh_sel)]
-    if domain_sel:      f = f[f["Domain"].isin(domain_sel)]
-    if client_sel:      f = f[f["company_name"].isin(client_sel)]
-    if exit_type_sel:   f = f[f["exit_type"].isin(exit_type_sel)]
-    if month_sel:       f = f[f["Month"].isin(month_sel)]
-    # Apply created_at date range
-    f = f[
-        (f["created_at"].dt.date >= date_from) &
-        (f["created_at"].dt.date <= date_to)
-    ]
+    if bh_sel:        f = f[f["Business Head"].isin(bh_sel)]
+    if domain_sel:    f = f[f["Domain"].isin(domain_sel)]
+    if client_sel:    f = f[f["company_name"].isin(client_sel)]
+    if exit_type_sel: f = f[f["exit_type"].isin(exit_type_sel)]
+    if month_sel:     f = f[f["Month"].isin(month_sel)]
     return f
 
-ef = apply_all(exit_df)
-pf = apply_all(pipe_df)
+ef = apply_main(exit_df)
+pf = apply_main(pipe_df)
 
-# Today's counts (regardless of other filters)
-today_exits    = exit_df[exit_df["created_at"].dt.date == today]
-today_pipeline = pipe_df[pipe_df["created_at"].dt.date == today]
+# Apply created_at date filter separately for Row 3
+ef_created = ef[(ef["created_at"].dt.date >= exit_date_from) & (ef["created_at"].dt.date <= exit_date_to)]
+pf_created = pf[(pf["created_at"].dt.date >= pipe_date_from) & (pf["created_at"].dt.date <= pipe_date_to)]
 
 # ─────────────────────────────────────────────
 # METRICS
@@ -285,64 +244,21 @@ exit_hc  = len(ef);               pipe_hc  = len(pf);               proj_hc  = e
 exit_po  = ef["p_o_value"].sum(); pipe_po  = pf["p_o_value"].sum(); proj_po  = exit_po + pipe_po
 exit_mar = ef["margin"].sum();    pipe_mar = pf["margin"].sum();    proj_mar = exit_mar + pipe_mar
 
+# Created metrics
+cr_exit_hc = len(ef_created);                  cr_pipe_hc = len(pf_created)
+cr_exit_po = ef_created["p_o_value"].sum();    cr_pipe_po = pf_created["p_o_value"].sum()
+cr_exit_mar = ef_created["margin"].sum();      cr_pipe_mar = pf_created["margin"].sum()
+
 # ─────────────────────────────────────────────
 # PAGE HEADER
 # ─────────────────────────────────────────────
-st.markdown(f"""<div class="pg-hdr">
+st.markdown("""<div class="pg-hdr">
     <div>
         <div class="pg-title">⚡ Exit Analytics Dashboard</div>
         <div class="pg-sub">JoulestoWatts Business Solutions · Workforce Intelligence</div>
     </div>
-    <div style="text-align:right;">
-        <span class="live-badge">● LIVE</span>
-        <div style="font-size:10px;color:#334155;margin-top:6px;">
-            Showing: <b style="color:#60a5fa;">{date_from.strftime('%d %b %Y')}</b>
-            → <b style="color:#60a5fa;">{date_to.strftime('%d %b %Y')}</b>
-        </div>
-    </div>
+    <span class="live-badge">● LIVE</span>
 </div>""", unsafe_allow_html=True)
-
-# ─────────────────────────────────────────────
-# TODAY'S SUMMARY BAR
-# ─────────────────────────────────────────────
-sec("TODAY'S ACTIVITY", "#4ade80")
-t1, t2, t3, t4 = st.columns(4)
-
-with t1:
-    st.markdown(f"""<div class="kpi-today">
-        <div class="top-bar"></div>
-        <div class="label">Today's Exits Created</div>
-        <div class="value">{len(today_exits):,}</div>
-        <div class="sub">New exits added today</div>
-    </div>""", unsafe_allow_html=True)
-
-with t2:
-    st.markdown(f"""<div class="kpi-today">
-        <div class="top-bar"></div>
-        <div class="label">Today's Pipeline Added</div>
-        <div class="value">{len(today_pipeline):,}</div>
-        <div class="sub">Pipeline entries today</div>
-    </div>""", unsafe_allow_html=True)
-
-with t3:
-    today_po = today_exits["p_o_value"].sum() + today_pipeline["p_o_value"].sum()
-    st.markdown(f"""<div class="kpi-today">
-        <div class="top-bar"></div>
-        <div class="label">Today's P.O Value</div>
-        <div class="value" style="font-size:20px;">₹{today_po:,.0f}</div>
-        <div class="sub">Combined Exit + Pipeline</div>
-    </div>""", unsafe_allow_html=True)
-
-with t4:
-    today_mar = today_exits["margin"].sum() + today_pipeline["margin"].sum()
-    st.markdown(f"""<div class="kpi-today">
-        <div class="top-bar"></div>
-        <div class="label">Today's Margin</div>
-        <div class="value" style="font-size:20px;">₹{today_mar:,.0f}</div>
-        <div class="sub">Combined Exit + Pipeline</div>
-    </div>""", unsafe_allow_html=True)
-
-st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
 # ROW 1 — HEADCOUNT
@@ -408,6 +324,61 @@ with p5:
         <div class="kpi-label" style="color:#c4b5fd;">Projection (Total P.O)</div>
         <div class="kpi-value" style="font-size:22px;">₹{proj_po:,.0f}</div>
         <div class="kpi-sub" style="color:#c4b5fd;">Total Margin &nbsp;₹{proj_mar:,.0f}</div>
+    </div>""", unsafe_allow_html=True)
+
+st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
+
+# ─────────────────────────────────────────────
+# ROW 3 — CREATED HC & PO (date-filtered)
+# ─────────────────────────────────────────────
+sec("CREATED HEADCOUNT & P.O VALUE", "#4ade80")
+
+r3c1, r3c2, r3c3, r3c4 = st.columns(4)
+
+with r3c1:
+    st.markdown(f"""<div class="kpi-created" style="border-color:#2d5aa0;">
+        <div class="top-bar" style="background:linear-gradient(90deg,#60a5fa,#3b82f6);"></div>
+        <div class="label" style="color:#93c5fd;">🚪 Exit Created HC</div>
+        <div class="hc">{cr_exit_hc:,}</div>
+        <div class="po" style="color:#60a5fa;">P.O &nbsp;₹{cr_exit_po:,.0f}</div>
+        <div class="po" style="color:#4a6080;">Margin &nbsp;₹{cr_exit_mar:,.0f}</div>
+        <div class="date-range">{exit_date_from.strftime('%d %b')} → {exit_date_to.strftime('%d %b %Y')}</div>
+    </div>""", unsafe_allow_html=True)
+
+with r3c2:
+    st.markdown(f"""<div class="kpi-created" style="border-color:#c2410c;">
+        <div class="top-bar" style="background:linear-gradient(90deg,#fb923c,#f97316);"></div>
+        <div class="label" style="color:#fdba74;">⚠️ Pipeline Created HC</div>
+        <div class="hc">{cr_pipe_hc:,}</div>
+        <div class="po" style="color:#fb923c;">P.O &nbsp;₹{cr_pipe_po:,.0f}</div>
+        <div class="po" style="color:#4a6080;">Margin &nbsp;₹{cr_pipe_mar:,.0f}</div>
+        <div class="date-range">{pipe_date_from.strftime('%d %b')} → {pipe_date_to.strftime('%d %b %Y')}</div>
+    </div>""", unsafe_allow_html=True)
+
+with r3c3:
+    total_cr_hc = cr_exit_hc + cr_pipe_hc
+    total_cr_po = cr_exit_po + cr_pipe_po
+    total_cr_mar = cr_exit_mar + cr_pipe_mar
+    st.markdown(f"""<div class="kpi-created" style="border-color:#059669;background:linear-gradient(135deg,#052e16,#064e3b);">
+        <div class="top-bar" style="background:linear-gradient(90deg,#34d399,#10b981);"></div>
+        <div class="label" style="color:#6ee7b7;">📊 Total Created HC</div>
+        <div class="hc">{total_cr_hc:,}</div>
+        <div class="po" style="color:#34d399;">P.O &nbsp;₹{total_cr_po:,.0f}</div>
+        <div class="po" style="color:#4a8060;">Margin &nbsp;₹{total_cr_mar:,.0f}</div>
+        <div class="date-range">Exit + Pipeline combined</div>
+    </div>""", unsafe_allow_html=True)
+
+with r3c4:
+    # Daily average of exits created
+    days_exit = max((exit_date_to - exit_date_from).days, 1)
+    avg_per_day = cr_exit_hc / days_exit
+    st.markdown(f"""<div class="kpi-created" style="border-color:#7c3aed;background:linear-gradient(135deg,#1e1b4b,#2e1065);">
+        <div class="top-bar" style="background:linear-gradient(90deg,#a78bfa,#8b5cf6);"></div>
+        <div class="label" style="color:#c4b5fd;">📈 Avg Exits / Day</div>
+        <div class="hc">{avg_per_day:.1f}</div>
+        <div class="po" style="color:#a78bfa;">Over {days_exit} day(s)</div>
+        <div class="po" style="color:#4a4080;">Exit date range</div>
+        <div class="date-range">{exit_date_from.strftime('%d %b')} → {exit_date_to.strftime('%d %b %Y')}</div>
     </div>""", unsafe_allow_html=True)
 
 st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)

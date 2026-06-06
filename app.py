@@ -177,29 +177,6 @@ with st.sidebar:
     st.markdown("<div style='font-size:10px;font-weight:700;letter-spacing:2px;color:#4ade80;margin-bottom:8px;'>📆 CREATED DATE FILTER</div>", unsafe_allow_html=True)
     st.caption("Applies to both Exit & Pipeline")
 
-    # Quick buttons — set session state values, NO key conflict with date_input
-    qc1, qc2 = st.columns(2)
-    with qc1:
-        if st.button("Today", use_container_width=True):
-            st.session_state["cr_from"] = today
-            st.session_state["cr_to"]   = today
-            st.rerun()
-    with qc2:
-        if st.button("This Week", use_container_width=True):
-            st.session_state["cr_from"] = today - timedelta(days=today.weekday())
-            st.session_state["cr_to"]   = today
-            st.rerun()
-    qc3, qc4 = st.columns(2)
-    with qc3:
-        if st.button("This Month", use_container_width=True):
-            st.session_state["cr_from"] = today.replace(day=1)
-            st.session_state["cr_to"]   = today
-            st.rerun()
-    with qc4:
-        if st.button("All Time", use_container_width=True):
-            st.session_state["cr_from"] = all_min
-            st.session_state["cr_to"]   = all_max
-            st.rerun()
 
     # Date inputs WITHOUT key= (avoids session state conflict)
     cr_from = st.date_input("From", value=st.session_state["cr_from"], min_value=all_min, max_value=all_max)

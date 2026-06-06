@@ -16,7 +16,6 @@ st.markdown("""
 *, html, body, [class*="css"] { font-family: 'Inter', sans-serif !important; }
 .stApp { background: #0e1525 !important; }
 .block-container { padding: 1.5rem 2rem 3rem 2rem !important; max-width: 100% !important; }
-
 [data-testid="stSidebar"] { background: #152033 !important; border-right: 1px solid #2a3f5f !important; }
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] p,
@@ -36,58 +35,35 @@ st.markdown("""
 [data-baseweb="menu"] li { color: #ffffff !important; }
 [data-baseweb="menu"] li:hover { background: #1e4080 !important; }
 [data-testid="stDateInput"] input { background: #1e3250 !important; color: #ffffff !important; border-color: #2a4a7f !important; }
-
 button[data-baseweb="tab"] { color: #64748b !important; font-weight: 500 !important; font-size:13px !important;}
 button[data-baseweb="tab"][aria-selected="true"] { color: #60a5fa !important; border-bottom-color: #60a5fa !important; font-weight: 700 !important; }
-
 .kpi-main { border-radius: 16px; padding: 22px 22px 18px 22px; position: relative; overflow: hidden; height: 128px; }
 .kpi-main .top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 16px 16px 0 0; }
 .kpi-main .kpi-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
 .kpi-main .kpi-value { font-family: 'JetBrains Mono', monospace !important; font-size: 30px; font-weight: 700; line-height: 1; color: #ffffff; }
 .kpi-main .kpi-sub  { font-size: 11px; margin-top: 8px; }
 .kpi-main .kpi-icon { position: absolute; top: 20px; right: 20px; font-size: 22px; opacity: 0.18; }
-
-/* Created KPI */
 .kpi-cr { border-radius:14px; padding:18px 20px 14px 20px; position:relative; overflow:hidden; border:1px solid #243450; background:#162032; }
 .kpi-cr .top-bar { position:absolute; top:0; left:0; right:0; height:3px; border-radius:14px 14px 0 0; }
 .kpi-cr .lbl { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
 .kpi-cr .hc  { font-family:'JetBrains Mono',monospace; font-size:30px; font-weight:700; color:#fff; line-height:1; }
 .kpi-cr .po  { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; margin-top:5px; }
-.kpi-cr .dr  { font-size:10px; color:#475569; margin-top:4px; }
-
-/* Client list card */
-.client-card { background:#162032; border:1px solid #243450; border-radius:12px; padding:16px; }
-.client-card .ch { font-size:10px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:10px; }
-.client-row { display:flex; justify-content:space-between; align-items:center;
-    padding:7px 10px; border-radius:8px; margin-bottom:4px; background:#0e1525; }
-.client-name { font-size:12px; color:#e2e8f0; font-weight:500; }
-.client-badge { font-family:'JetBrains Mono',monospace; font-size:11px; font-weight:700;
-    padding:2px 8px; border-radius:6px; }
-
 .sec-hdr { display:flex; align-items:center; gap:10px; margin:2.2rem 0 0.9rem 0; }
 .sec-hdr-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 .sec-hdr-title { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#cbd5e1; }
 .sec-hdr-line { flex:1; height:1px; background:#1e2d45; }
-
 .chart-wrap { background:#162032; border:1px solid #243450; border-radius:14px; overflow:hidden; padding:2px; }
-
-.totals-bar { background:linear-gradient(135deg,#1a3a6b,#1e2d45); border:1px solid #2a4a7f;
-    border-radius:12px; padding:14px 20px; display:flex; gap:0; margin-top:8px; }
+.totals-bar { background:linear-gradient(135deg,#1a3a6b,#1e2d45); border:1px solid #2a4a7f; border-radius:12px; padding:14px 20px; display:flex; gap:0; margin-top:8px; }
 .tot-item { flex:1; text-align:center; border-right:1px solid #243450; padding:0 12px; }
 .tot-item:last-child { border-right:none; }
 .tot-label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#64748b; margin-bottom:5px; }
 .tot-value { font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; color:#f1f5f9; }
-.tot-value.blue   { color:#60a5fa; }
-.tot-value.green  { color:#34d399; }
-.tot-value.amber  { color:#fb923c; }
-.tot-value.purple { color:#a78bfa; }
-
+.tot-value.blue { color:#60a5fa; } .tot-value.green { color:#34d399; } .tot-value.amber { color:#fb923c; } .tot-value.purple { color:#a78bfa; }
 .pg-hdr { padding:0.3rem 0 1.4rem 0; border-bottom:1px solid #1e2d45; margin-bottom:0.3rem; display:flex; justify-content:space-between; align-items:flex-end; }
 .pg-title { font-size:24px; font-weight:800; color:#f1f5f9; }
 .pg-sub { font-size:11px; color:#475569; margin-top:4px; letter-spacing:1.5px; text-transform:uppercase; }
 .live-badge { background:#052e16; border:1px solid #16a34a; color:#4ade80; font-size:10px; font-weight:700; padding:5px 14px; border-radius:20px; letter-spacing:2px; }
 .op-sign { display:flex; align-items:center; justify-content:center; height:128px; font-size:36px; color:#2d4a6a; font-weight:300; }
-
 #MainMenu, footer, header[data-testid="stHeader"] { visibility:hidden; }
 </style>
 """, unsafe_allow_html=True)
@@ -159,10 +135,15 @@ try:
 except Exception as e:
     st.error(f"❌ Error loading file: {e}"); st.stop()
 
-# Date boundaries
 all_min = min(exit_df["created_at"].dropna().dt.date.min(), pipe_df["created_at"].dropna().dt.date.min())
 all_max = max(exit_df["created_at"].dropna().dt.date.max(), pipe_df["created_at"].dropna().dt.date.max())
 today   = date.today()
+
+# ── Init session state ONCE before sidebar ──
+if "cr_from" not in st.session_state:
+    st.session_state["cr_from"] = all_min
+if "cr_to" not in st.session_state:
+    st.session_state["cr_to"] = all_max
 
 # ─────────────────────────────────────────────
 # SIDEBAR
@@ -171,7 +152,6 @@ with st.sidebar:
     st.markdown("### ⚡ EXIT ANALYTICS")
     st.markdown("---")
 
-    # Cascading filters
     bh_options = sorted((set(exit_df["Business Head"].dropna()) | set(pipe_df["Business Head"].dropna())) - {"","nan"})
     bh_sel = st.multiselect("👤  Business Head", bh_options, placeholder="All")
     def bh_f(df): return df[df["Business Head"].isin(bh_sel)] if bh_sel else df
@@ -194,38 +174,40 @@ with st.sidebar:
     month_sel = st.multiselect("📅  Month", month_options, placeholder="All")
 
     st.markdown("---")
-
-    # ONE combined created date filter for both exit & pipeline
     st.markdown("<div style='font-size:10px;font-weight:700;letter-spacing:2px;color:#4ade80;margin-bottom:8px;'>📆 CREATED DATE FILTER</div>", unsafe_allow_html=True)
     st.caption("Applies to both Exit & Pipeline")
 
-    # Quick select buttons
+    # Quick buttons — set session state values, NO key conflict with date_input
     qc1, qc2 = st.columns(2)
     with qc1:
-        if st.button("Today", use_container_width=True, key="q_today"):
+        if st.button("Today", use_container_width=True):
             st.session_state["cr_from"] = today
             st.session_state["cr_to"]   = today
+            st.rerun()
     with qc2:
-        if st.button("This Week", use_container_width=True, key="q_week"):
+        if st.button("This Week", use_container_width=True):
             st.session_state["cr_from"] = today - timedelta(days=today.weekday())
             st.session_state["cr_to"]   = today
+            st.rerun()
     qc3, qc4 = st.columns(2)
     with qc3:
-        if st.button("This Month", use_container_width=True, key="q_month"):
+        if st.button("This Month", use_container_width=True):
             st.session_state["cr_from"] = today.replace(day=1)
             st.session_state["cr_to"]   = today
+            st.rerun()
     with qc4:
-        if st.button("All Time", use_container_width=True, key="q_all"):
+        if st.button("All Time", use_container_width=True):
             st.session_state["cr_from"] = all_min
             st.session_state["cr_to"]   = all_max
+            st.rerun()
 
-    if "cr_from" not in st.session_state: st.session_state["cr_from"] = all_min
-    if "cr_to"   not in st.session_state: st.session_state["cr_to"]   = all_max
+    # Date inputs WITHOUT key= (avoids session state conflict)
+    cr_from = st.date_input("From", value=st.session_state["cr_from"], min_value=all_min, max_value=all_max)
+    cr_to   = st.date_input("To",   value=st.session_state["cr_to"],   min_value=all_min, max_value=all_max)
 
-    cr_from = st.date_input("From", value=st.session_state["cr_from"],
-                             min_value=all_min, max_value=all_max, key="cr_from")
-    cr_to   = st.date_input("To",   value=st.session_state["cr_to"],
-                             min_value=all_min, max_value=all_max, key="cr_to")
+    # Keep session state in sync with manual picks
+    st.session_state["cr_from"] = cr_from
+    st.session_state["cr_to"]   = cr_to
 
     st.markdown("---")
     if st.button("🔄  Refresh Data", use_container_width=True):
@@ -252,27 +234,20 @@ def apply_main(df):
 ef = apply_main(exit_df)
 pf = apply_main(pipe_df)
 
-# Created filtered (same main filters + date range)
 ef_cr = ef[(ef["created_at"].dt.date >= cr_from) & (ef["created_at"].dt.date <= cr_to)]
 pf_cr = pf[(pf["created_at"].dt.date >= cr_from) & (pf["created_at"].dt.date <= cr_to)]
 
-# ─────────────────────────────────────────────
-# METRICS
-# ─────────────────────────────────────────────
 exit_hc  = len(ef);               pipe_hc  = len(pf);               proj_hc  = exit_hc + pipe_hc
 exit_po  = ef["p_o_value"].sum(); pipe_po  = pf["p_o_value"].sum(); proj_po  = exit_po + pipe_po
 exit_mar = ef["margin"].sum();    pipe_mar = pf["margin"].sum();    proj_mar = exit_mar + pipe_mar
-
-cr_exit_hc  = len(ef_cr);                  cr_pipe_hc  = len(pf_cr)
-cr_exit_po  = ef_cr["p_o_value"].sum();    cr_pipe_po  = pf_cr["p_o_value"].sum()
-cr_exit_mar = ef_cr["margin"].sum();       cr_pipe_mar = pf_cr["margin"].sum()
-cr_total_hc = cr_exit_hc + cr_pipe_hc
-cr_total_po = cr_exit_po + cr_pipe_po
+cr_exit_hc  = len(ef_cr);                 cr_pipe_hc  = len(pf_cr)
+cr_exit_po  = ef_cr["p_o_value"].sum();   cr_pipe_po  = pf_cr["p_o_value"].sum()
+cr_exit_mar = ef_cr["margin"].sum();      cr_pipe_mar = pf_cr["margin"].sum()
 
 # ─────────────────────────────────────────────
 # PAGE HEADER
 # ─────────────────────────────────────────────
-st.markdown(f"""<div class="pg-hdr">
+st.markdown("""<div class="pg-hdr">
     <div>
         <div class="pg-title">⚡ Exit Analytics Dashboard</div>
         <div class="pg-sub">JoulestoWatts Business Solutions · Workforce Intelligence</div>
@@ -280,7 +255,7 @@ st.markdown(f"""<div class="pg-hdr">
     <span class="live-badge">● LIVE</span>
 </div>""", unsafe_allow_html=True)
 
-# ═══════════════════════ ROW 1 — HEADCOUNT ═══════════════════════
+# ═══ ROW 1 — HEADCOUNT ═══
 sec("HEADCOUNT OVERVIEW", "#60a5fa")
 h1,h2,h3,h4,h5 = st.columns([1,0.12,1,0.12,1])
 with h1:
@@ -312,7 +287,7 @@ with h5:
 
 st.markdown("<div style='height:14px'></div>", unsafe_allow_html=True)
 
-# ═══════════════════════ ROW 2 — P.O VALUE ═══════════════════════
+# ═══ ROW 2 — P.O VALUE ═══
 sec("P.O VALUE & MARGIN OVERVIEW", "#a78bfa")
 p1,p2,p3,p4,p5 = st.columns([1,0.12,1,0.12,1])
 with p1:
@@ -344,7 +319,7 @@ with p5:
 
 st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
-# ═══════════════════════ CLIENT WISE ═══════════════════════
+# ═══ CLIENT WISE ═══
 sec("CLIENT WISE ANALYSIS", "#38bdf8")
 client_tab1, client_tab2 = st.tabs(["  🚪 Exit  ", "  🔄 Exit Pipeline  "])
 
@@ -376,7 +351,7 @@ def client_charts(df, label):
 with client_tab1: client_charts(ef, "Exit")
 with client_tab2: client_charts(pf, "Pipeline")
 
-# ═══════════════════════ BH WISE ═══════════════════════
+# ═══ BH WISE ═══
 sec("BUSINESS HEAD WISE ANALYSIS", "#34d399")
 bh_tab1, bh_tab2 = st.tabs(["  🚪 Exit  ", "  🔄 Exit Pipeline  "])
 
@@ -408,7 +383,7 @@ def bh_charts(df, label):
 with bh_tab1: bh_charts(ef, "Exit")
 with bh_tab2: bh_charts(pf, "Pipeline")
 
-# ═══════════════════════ DOMAIN WISE ═══════════════════════
+# ═══ DOMAIN WISE ═══
 sec("DOMAIN WISE ANALYSIS", "#fb923c")
 domain_tab1, domain_tab2 = st.tabs(["  🚪 Exit  ", "  🔄 Exit Pipeline  "])
 
@@ -419,8 +394,7 @@ def domain_charts(df, label):
         dom_e = df["Domain"].value_counts().reset_index(); dom_e.columns = ["Domain","Count"]
         fig6 = go.Figure(go.Pie(labels=dom_e["Domain"], values=dom_e["Count"], hole=0.52,
             marker=dict(colors=PALETTE[:len(dom_e)], line=dict(color="#0e1525", width=3)),
-            textfont=dict(color="#ffffff", size=12), textinfo="label+percent",
-            hovertemplate="<b>%{label}</b><br>Count: %{value}<br>%{percent}<extra></extra>"))
+            textfont=dict(color="#ffffff", size=12), textinfo="label+percent"))
         fig6.update_layout(**clayout(f"{label} by Domain", 310)); fig6.update_layout(showlegend=False)
         st.plotly_chart(fig6, use_container_width=True, config={"displayModeBar":False})
         st.markdown('</div>', unsafe_allow_html=True)
@@ -448,7 +422,7 @@ def domain_charts(df, label):
 with domain_tab1: domain_charts(ef, "Exit")
 with domain_tab2: domain_charts(pf, "Pipeline")
 
-# ═══════════════════════ EXIT TYPE + TREND ═══════════════════════
+# ═══ EXIT TYPE + TREND ═══
 sec("EXIT TYPE & MONTHLY TREND", "#f472b6")
 ec1, ec2, ec3 = st.columns([1, 1, 1.4])
 with ec1:
@@ -456,8 +430,7 @@ with ec1:
     et = ef["exit_type"].value_counts().reset_index(); et.columns = ["Type","Count"]
     fig9 = go.Figure(go.Pie(labels=et["Type"], values=et["Count"], hole=0.5,
         marker=dict(colors=PALETTE[:len(et)], line=dict(color="#0e1525", width=2)),
-        textfont=dict(color="#ffffff", size=10), textinfo="percent",
-        hovertemplate="<b>%{label}</b><br>%{value} exits · %{percent}<extra></extra>"))
+        textfont=dict(color="#ffffff", size=10), textinfo="percent"))
     fig9.update_layout(**clayout("Exit Type · Exits", 330))
     fig9.update_layout(legend=dict(orientation="v", x=1.02, y=0.5, font=dict(color="#cbd5e1",size=9), bgcolor="rgba(0,0,0,0)"))
     st.plotly_chart(fig9, use_container_width=True, config={"displayModeBar":False})
@@ -468,8 +441,7 @@ with ec2:
     if not pt.empty:
         fig10 = go.Figure(go.Pie(labels=pt["Type"], values=pt["Count"], hole=0.5,
             marker=dict(colors=PALETTE[3:3+len(pt)], line=dict(color="#0e1525", width=2)),
-            textfont=dict(color="#ffffff", size=10), textinfo="percent",
-            hovertemplate="<b>%{label}</b><br>%{value} · %{percent}<extra></extra>"))
+            textfont=dict(color="#ffffff", size=10), textinfo="percent"))
         fig10.update_layout(**clayout("Exit Type · Pipeline", 330))
         fig10.update_layout(legend=dict(orientation="v", x=1.02, y=0.5, font=dict(color="#cbd5e1",size=9), bgcolor="rgba(0,0,0,0)"))
         st.plotly_chart(fig10, use_container_width=True, config={"displayModeBar":False})
@@ -497,7 +469,7 @@ with ec3:
     st.plotly_chart(fig11, use_container_width=True, config={"displayModeBar":False})
     st.markdown('</div>', unsafe_allow_html=True)
 
-# ═══════════════════════ RAW DATA ═══════════════════════
+# ═══ RAW DATA ═══
 sec("RAW DATA", "#64748b")
 tab1, tab2 = st.tabs(["  📋  Exit Records  ", "  🔄  Pipeline Records  "])
 EXIT_COLS = {"full_name":"Full Name","employee_id":"Employee ID","employee_type":"Emp Type",
@@ -539,7 +511,7 @@ with tab2: show_table(pf, PIPE_COLS, "Pipeline")
 # ═══════════════════════════════════════════════════════════
 sec(f"CREATED HEADCOUNT & P.O VALUE  ·  {cr_from.strftime('%d %b %Y')} → {cr_to.strftime('%d %b %Y')}", "#4ade80")
 
-# ── Top KPI cards ──
+# ── 4 KPI cards ──
 k1, k2, k3, k4 = st.columns(4)
 with k1:
     st.markdown(f"""<div class="kpi-cr" style="border-color:#2d5aa0;">
@@ -561,8 +533,8 @@ with k3:
     st.markdown(f"""<div class="kpi-cr" style="border-color:#059669;background:linear-gradient(135deg,#052e16,#064e3b);">
         <div class="top-bar" style="background:linear-gradient(90deg,#34d399,#10b981);"></div>
         <div class="lbl" style="color:#6ee7b7;">📊 Total Created HC</div>
-        <div class="hc">{cr_total_hc:,}</div>
-        <div class="po" style="color:#34d399;">P.O  ₹{cr_total_po:,.0f}</div>
+        <div class="hc">{cr_exit_hc + cr_pipe_hc:,}</div>
+        <div class="po" style="color:#34d399;">P.O  ₹{cr_exit_po + cr_pipe_po:,.0f}</div>
         <div class="po" style="color:#475569;font-size:11px;">Exit + Pipeline</div>
     </div>""", unsafe_allow_html=True)
 with k4:
@@ -578,60 +550,47 @@ with k4:
 
 st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
 
-# ── Client list — Exit & Pipeline side by side with tabs ──
+# ── Client list tabs ──
 cl_tab1, cl_tab2 = st.tabs(["  🚪 Exit Created — Client List  ", "  🔄 Pipeline Created — Client List  "])
 
-def client_list(df_cr, df_full, accent, po_color):
+def client_list_view(df_cr, accent):
     if df_cr.empty:
         st.info("No records found for the selected date range.")
         return
 
-    # Group by client — count HC and sum PO
-    summary = (df_cr.groupby("company_name")
-                     .agg(HC=("employee_id","count"), PO=("p_o_value","sum"), Margin=("margin","sum"))
-                     .reset_index()
-                     .sort_values("HC", ascending=False))
-
-    # Metrics at top
+    # Summary metrics
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Total HC",      f"{df_cr['employee_id'].count():,}")
-    m2.metric("Total P.O",     f"₹{df_cr['p_o_value'].sum():,.0f}")
-    m3.metric("Total Margin",  f"₹{df_cr['margin'].sum():,.0f}")
-    m4.metric("Unique Clients",f"{df_cr['company_name'].nunique():,}")
+    m1.metric("Total HC",       f"{len(df_cr):,}")
+    m2.metric("Total P.O",      f"₹{df_cr['p_o_value'].sum():,.0f}")
+    m3.metric("Total Margin",   f"₹{df_cr['margin'].sum():,.0f}")
+    m4.metric("Unique Clients", f"{df_cr['company_name'].nunique():,}")
 
     st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 
-    # Render client rows
-    rows_html = ""
-    for _, row in summary.iterrows():
-        rows_html += f"""
-        <div class="client-row">
-            <span class="client-name">{row['company_name']}</span>
-            <div style="display:flex;gap:10px;align-items:center;">
-                <span class="client-badge" style="background:rgba(99,179,237,0.15);color:{accent};">{int(row['HC'])} HC</span>
-                <span class="client-badge" style="background:rgba(52,211,153,0.1);color:#34d399;">₹{row['PO']:,.0f}</span>
-                <span class="client-badge" style="background:rgba(167,139,250,0.1);color:#a78bfa;">₹{row['Margin']:,.0f}</span>
-            </div>
-        </div>"""
+    # Build summary dataframe — use Streamlit dataframe (NO raw HTML loop)
+    summary = (df_cr.groupby("company_name")
+                    .agg(HC=("employee_id","count"),
+                         PO=("p_o_value","sum"),
+                         Margin=("margin","sum"))
+                    .reset_index()
+                    .sort_values("HC", ascending=False)
+                    .rename(columns={"company_name":"Client"}))
 
-    st.markdown(f"""
-    <div class="client-card">
-        <div class="ch" style="color:{accent};">
-            CLIENT BREAKDOWN &nbsp;·&nbsp; {cr_from.strftime('%d %b %Y')} → {cr_to.strftime('%d %b %Y')}
-        </div>
-        <div style="display:flex;justify-content:flex-end;gap:20px;margin-bottom:8px;">
-            <span style="font-size:9px;color:#475569;letter-spacing:1px;">HC COUNT &nbsp;&nbsp; P.O VALUE &nbsp;&nbsp; MARGIN</span>
-        </div>
-        {rows_html}
-    </div>""", unsafe_allow_html=True)
+    summary["P.O Value (₹)"] = summary["PO"].apply(lambda x: f"₹{x:,.0f}")
+    summary["Margin (₹)"]    = summary["Margin"].apply(lambda x: f"₹{x:,.0f}")
+
+    st.dataframe(
+        summary[["Client","HC","P.O Value (₹)","Margin (₹)"]].reset_index(drop=True),
+        use_container_width=True,
+        height=min(60 + len(summary) * 35, 500)
+    )
 
 with cl_tab1:
-    client_list(ef_cr, ef, "#60a5fa", "#34d399")
+    client_list_view(ef_cr, "#60a5fa")
 
 with cl_tab2:
-    client_list(pf_cr, pf, "#fb923c", "#34d399")
+    client_list_view(pf_cr, "#fb923c")
 
-# ── Footer ──
 st.markdown("""
 <div style="margin-top:3rem;padding:1rem 0;border-top:1px solid #1e2d45;
      display:flex;justify-content:space-between;align-items:center;">

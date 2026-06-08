@@ -10,63 +10,120 @@ EMP_TYPE_MAP = {1:"Contractor", 2:"Permanent", 4:"Intern", 6:"Contract Staff", 7
 
 st.set_page_config(page_title="Exit Analytics · JoulestoWatts", page_icon="⚡", layout="wide", initial_sidebar_state="expanded")
 
-st.markdown("""
+# ─────────────────────────────────────────────
+# THEMES
+# ─────────────────────────────────────────────
+THEMES = {
+    "🌑 Deep Space": {
+        "app_bg":       "#0e1525",
+        "sidebar_bg":   "#152033",
+        "card_bg":      "#162032",
+        "border":       "#243450",
+        "sidebar_border":"#2a3f5f",
+        "input_bg":     "#1e3250",
+        "text_main":    "#f1f5f9",
+        "text_muted":   "#475569",
+        "text_dim":     "#334155",
+        "grid":         "#1e2d45",
+        "plot_bg":      "rgba(0,0,0,0)",
+    },
+    "🌿 Forest Dark": {
+        "app_bg":       "#0a1510",
+        "sidebar_bg":   "#0f1f18",
+        "card_bg":      "#122018",
+        "border":       "#1a3828",
+        "sidebar_border":"#1e4030",
+        "input_bg":     "#163024",
+        "text_main":    "#ecfdf5",
+        "text_muted":   "#4b7a5e",
+        "text_dim":     "#2d4a3a",
+        "grid":         "#1a2e22",
+        "plot_bg":      "rgba(0,0,0,0)",
+    },
+    "🌆 Slate Pro": {
+        "app_bg":       "#1a1a2e",
+        "sidebar_bg":   "#16213e",
+        "card_bg":      "#1a2040",
+        "border":       "#2a3060",
+        "sidebar_border":"#2a3060",
+        "input_bg":     "#1e2850",
+        "text_main":    "#e8eaf6",
+        "text_muted":   "#5c6bc0",
+        "text_dim":     "#283593",
+        "grid":         "#1e2440",
+        "plot_bg":      "rgba(0,0,0,0)",
+    },
+}
+
+# Init theme in session state
+if "theme" not in st.session_state:
+    st.session_state["theme"] = "🌑 Deep Space"
+
+# ─────────────────────────────────────────────
+# CSS (dynamic via theme)
+# ─────────────────────────────────────────────
+def inject_css(t):
+    st.markdown(f"""
 <style>
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
-*, html, body, [class*="css"] { font-family: 'Inter', sans-serif !important; }
-.stApp { background: #0e1525 !important; }
-.block-container { padding: 1.5rem 2rem 3rem 2rem !important; max-width: 100% !important; }
-[data-testid="stSidebar"] { background: #152033 !important; border-right: 1px solid #2a3f5f !important; }
+*, html, body, [class*="css"] {{ font-family: 'Inter', sans-serif !important; }}
+.stApp {{ background: {t['app_bg']} !important; }}
+.block-container {{ padding: 1.5rem 2rem 3rem 2rem !important; max-width: 100% !important; }}
+[data-testid="stSidebar"] {{ background: {t['sidebar_bg']} !important; border-right: 1px solid {t['sidebar_border']} !important; }}
 [data-testid="stSidebar"] label,
 [data-testid="stSidebar"] p,
 [data-testid="stSidebar"] span,
-[data-testid="stSidebar"] div { color: #ffffff !important; }
-[data-testid="stSidebar"] .stMarkdown h3 { color: #60a5fa !important; font-size: 12px !important; letter-spacing: 2.5px !important; text-transform: uppercase !important; }
-[data-testid="stSidebar"] [data-baseweb="select"] > div { background: #1e3250 !important; border-color: #2a4a7f !important; color: #ffffff !important; }
-[data-testid="stSidebar"] svg { fill: #60a5fa !important; }
-[data-testid="stMultiSelect"] span[data-baseweb="tag"] { background: #1e4080 !important; border: 1px solid #3b82f6 !important; color: #ffffff !important; }
-[data-testid="stMultiSelect"] span[data-baseweb="tag"] span { color: #ffffff !important; }
-[data-testid="stSidebar"] .stButton button { background: #1e3250 !important; border: 1px solid #3b82f6 !important; color: #60a5fa !important; font-weight: 600 !important; border-radius: 8px !important; }
-[data-baseweb="popover"] ul li { background: #1e3250 !important; color: #ffffff !important; }
-[data-baseweb="popover"] ul li:hover { background: #1e4080 !important; }
-[data-baseweb="popover"] [role="option"] { color: #ffffff !important; }
-[data-baseweb="popover"] { background: #1e3250 !important; }
-[data-baseweb="menu"] { background: #1e3250 !important; border: 1px solid #2a4a7f !important; }
-[data-baseweb="menu"] li { color: #ffffff !important; }
-[data-baseweb="menu"] li:hover { background: #1e4080 !important; }
-[data-testid="stDateInput"] input { background: #1e3250 !important; color: #ffffff !important; border-color: #2a4a7f !important; }
-button[data-baseweb="tab"] { color: #64748b !important; font-weight: 500 !important; font-size:13px !important;}
-button[data-baseweb="tab"][aria-selected="true"] { color: #60a5fa !important; border-bottom-color: #60a5fa !important; font-weight: 700 !important; }
-.kpi-main { border-radius: 16px; padding: 22px 22px 18px 22px; position: relative; overflow: hidden; height: 128px; }
-.kpi-main .top-bar { position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 16px 16px 0 0; }
-.kpi-main .kpi-label { font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }
-.kpi-main .kpi-value { font-family: 'JetBrains Mono', monospace !important; font-size: 30px; font-weight: 700; line-height: 1; color: #ffffff; }
-.kpi-main .kpi-sub  { font-size: 11px; margin-top: 8px; }
-.kpi-main .kpi-icon { position: absolute; top: 20px; right: 20px; font-size: 22px; opacity: 0.18; }
-.kpi-cr { border-radius:14px; padding:18px 20px 14px 20px; position:relative; overflow:hidden; border:1px solid #243450; background:#162032; }
-.kpi-cr .top-bar { position:absolute; top:0; left:0; right:0; height:3px; border-radius:14px 14px 0 0; }
-.kpi-cr .lbl { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }
-.kpi-cr .hc  { font-family:'JetBrains Mono',monospace; font-size:30px; font-weight:700; color:#fff; line-height:1; }
-.kpi-cr .po  { font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; margin-top:5px; }
-.sec-hdr { display:flex; align-items:center; gap:10px; margin:2.2rem 0 0.9rem 0; }
-.sec-hdr-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
-.sec-hdr-title { font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#cbd5e1; }
-.sec-hdr-line { flex:1; height:1px; background:#1e2d45; }
-.chart-wrap { background:#162032; border:1px solid #243450; border-radius:14px; overflow:hidden; padding:2px; }
-.totals-bar { background:linear-gradient(135deg,#1a3a6b,#1e2d45); border:1px solid #2a4a7f; border-radius:12px; padding:14px 20px; display:flex; gap:0; margin-top:8px; }
-.tot-item { flex:1; text-align:center; border-right:1px solid #243450; padding:0 12px; }
-.tot-item:last-child { border-right:none; }
-.tot-label { font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#64748b; margin-bottom:5px; }
-.tot-value { font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; color:#f1f5f9; }
-.tot-value.blue { color:#60a5fa; } .tot-value.green { color:#34d399; } .tot-value.amber { color:#fb923c; } .tot-value.purple { color:#a78bfa; }
-.pg-hdr { padding:0.3rem 0 1.4rem 0; border-bottom:1px solid #1e2d45; margin-bottom:0.3rem; display:flex; justify-content:space-between; align-items:flex-end; }
-.pg-title { font-size:24px; font-weight:800; color:#f1f5f9; }
-.pg-sub { font-size:11px; color:#475569; margin-top:4px; letter-spacing:1.5px; text-transform:uppercase; }
-.live-badge { background:#052e16; border:1px solid #16a34a; color:#4ade80; font-size:10px; font-weight:700; padding:5px 14px; border-radius:20px; letter-spacing:2px; }
-.op-sign { display:flex; align-items:center; justify-content:center; height:128px; font-size:36px; color:#2d4a6a; font-weight:300; }
-#MainMenu, footer, header[data-testid="stHeader"] { visibility:hidden; }
+[data-testid="stSidebar"] div {{ color: #ffffff !important; }}
+[data-testid="stSidebar"] .stMarkdown h3 {{ color: #60a5fa !important; font-size: 12px !important; letter-spacing: 2.5px !important; text-transform: uppercase !important; }}
+[data-testid="stSidebar"] [data-baseweb="select"] > div {{ background: {t['input_bg']} !important; border-color: {t['border']} !important; color: #ffffff !important; }}
+[data-testid="stSidebar"] svg {{ fill: #60a5fa !important; }}
+[data-testid="stMultiSelect"] span[data-baseweb="tag"] {{ background: #1e4080 !important; border: 1px solid #3b82f6 !important; color: #ffffff !important; }}
+[data-testid="stMultiSelect"] span[data-baseweb="tag"] span {{ color: #ffffff !important; }}
+[data-testid="stSidebar"] .stButton button {{ background: {t['input_bg']} !important; border: 1px solid #3b82f6 !important; color: #60a5fa !important; font-weight: 600 !important; border-radius: 8px !important; }}
+[data-baseweb="popover"] ul li {{ background: {t['input_bg']} !important; color: #ffffff !important; }}
+[data-baseweb="popover"] ul li:hover {{ background: #1e4080 !important; }}
+[data-baseweb="popover"] [role="option"] {{ color: #ffffff !important; }}
+[data-baseweb="popover"] {{ background: {t['input_bg']} !important; }}
+[data-baseweb="menu"] {{ background: {t['input_bg']} !important; border: 1px solid {t['border']} !important; }}
+[data-baseweb="menu"] li {{ color: #ffffff !important; }}
+[data-baseweb="menu"] li:hover {{ background: #1e4080 !important; }}
+[data-testid="stDateInput"] input {{ background: {t['input_bg']} !important; color: #ffffff !important; border-color: {t['border']} !important; }}
+button[data-baseweb="tab"] {{ color: #64748b !important; font-weight: 500 !important; font-size:13px !important;}}
+button[data-baseweb="tab"][aria-selected="true"] {{ color: #60a5fa !important; border-bottom-color: #60a5fa !important; font-weight: 700 !important; }}
+.kpi-main {{ border-radius: 16px; padding: 22px 22px 18px 22px; position: relative; overflow: hidden; height: 128px; }}
+.kpi-main .top-bar {{ position: absolute; top: 0; left: 0; right: 0; height: 4px; border-radius: 16px 16px 0 0; }}
+.kpi-main .kpi-label {{ font-size: 10px; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; margin-bottom: 10px; }}
+.kpi-main .kpi-value {{ font-family: 'JetBrains Mono', monospace !important; font-size: 30px; font-weight: 700; line-height: 1; color: #ffffff; }}
+.kpi-main .kpi-sub  {{ font-size: 11px; margin-top: 8px; }}
+.kpi-main .kpi-icon {{ position: absolute; top: 20px; right: 20px; font-size: 22px; opacity: 0.18; }}
+.kpi-cr {{ border-radius:14px; padding:18px 20px 14px 20px; position:relative; overflow:hidden; border:1px solid {t['border']}; background:{t['card_bg']}; }}
+.kpi-cr .top-bar {{ position:absolute; top:0; left:0; right:0; height:3px; border-radius:14px 14px 0 0; }}
+.kpi-cr .lbl {{ font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; margin-bottom:8px; }}
+.kpi-cr .hc  {{ font-family:'JetBrains Mono',monospace; font-size:30px; font-weight:700; color:#fff; line-height:1; }}
+.kpi-cr .po  {{ font-family:'JetBrains Mono',monospace; font-size:13px; font-weight:600; margin-top:5px; }}
+.sec-hdr {{ display:flex; align-items:center; gap:10px; margin:2.2rem 0 0.9rem 0; }}
+.sec-hdr-dot {{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }}
+.sec-hdr-title {{ font-size:10px; font-weight:700; letter-spacing:3px; text-transform:uppercase; color:#cbd5e1; }}
+.sec-hdr-line {{ flex:1; height:1px; background:{t['grid']}; }}
+.chart-wrap {{ background:{t['card_bg']}; border:1px solid {t['border']}; border-radius:14px; overflow:hidden; padding:2px; }}
+.totals-bar {{ background:linear-gradient(135deg,#1a3a6b,{t['card_bg']}); border:1px solid #2a4a7f; border-radius:12px; padding:14px 20px; display:flex; gap:0; margin-top:8px; }}
+.tot-item {{ flex:1; text-align:center; border-right:1px solid {t['border']}; padding:0 12px; }}
+.tot-item:last-child {{ border-right:none; }}
+.tot-label {{ font-size:9px; font-weight:700; letter-spacing:2px; text-transform:uppercase; color:#64748b; margin-bottom:5px; }}
+.tot-value {{ font-family:'JetBrains Mono',monospace; font-size:15px; font-weight:700; color:{t['text_main']}; }}
+.tot-value.blue {{ color:#60a5fa; }} .tot-value.green {{ color:#34d399; }} .tot-value.amber {{ color:#fb923c; }} .tot-value.purple {{ color:#a78bfa; }}
+.pg-hdr {{ padding:0.3rem 0 1.4rem 0; border-bottom:1px solid {t['grid']}; margin-bottom:0.3rem; display:flex; justify-content:space-between; align-items:flex-end; }}
+.pg-title {{ font-size:24px; font-weight:800; color:{t['text_main']}; }}
+.pg-sub {{ font-size:11px; color:{t['text_muted']}; margin-top:4px; letter-spacing:1.5px; text-transform:uppercase; }}
+.live-badge {{ background:#052e16; border:1px solid #16a34a; color:#4ade80; font-size:10px; font-weight:700; padding:5px 14px; border-radius:20px; letter-spacing:2px; }}
+.op-sign {{ display:flex; align-items:center; justify-content:center; height:128px; font-size:36px; color:{t['text_dim']}; font-weight:300; }}
+#MainMenu, footer, header[data-testid="stHeader"] {{ visibility:hidden; }}
 </style>
 """, unsafe_allow_html=True)
+
+# Get current theme dict
+T = THEMES[st.session_state["theme"]]
+inject_css(T)
 
 PALETTE = ["#60a5fa","#34d399","#fb923c","#f472b6","#a78bfa","#38bdf8","#facc15","#f87171","#86efac","#c4b5fd"]
 
@@ -77,8 +134,8 @@ def clayout(title="", h=330):
         title=dict(text=f"<b>{title}</b>", font=dict(size=13, color="#e2e8f0"), x=0.02, y=0.97),
         margin=dict(l=10, r=16, t=42, b=10), height=h,
         legend=dict(bgcolor="rgba(0,0,0,0)", font=dict(color="#94a3b8", size=11)),
-        xaxis=dict(gridcolor="#1e2d45", zerolinecolor="#243450", tickfont=dict(color="#64748b", size=10), showline=False),
-        yaxis=dict(gridcolor="#1e2d45", zerolinecolor="#243450", tickfont=dict(color="#64748b", size=10), showline=False),
+        xaxis=dict(gridcolor=T["grid"], zerolinecolor=T["border"], tickfont=dict(color="#64748b", size=10), showline=False),
+        yaxis=dict(gridcolor=T["grid"], zerolinecolor=T["border"], tickfont=dict(color="#64748b", size=10), showline=False),
     )
 
 def sec(title, color="#60a5fa"):
@@ -139,17 +196,29 @@ all_min = min(exit_df["created_at"].dropna().dt.date.min(), pipe_df["created_at"
 all_max = max(exit_df["created_at"].dropna().dt.date.max(), pipe_df["created_at"].dropna().dt.date.max())
 today   = date.today()
 
-# ── Init session state ONCE before sidebar ──
-if "cr_from" not in st.session_state:
-    st.session_state["cr_from"] = all_min
-if "cr_to" not in st.session_state:
-    st.session_state["cr_to"] = all_max
+if "cr_from" not in st.session_state: st.session_state["cr_from"] = all_min
+if "cr_to"   not in st.session_state: st.session_state["cr_to"]   = all_max
 
 # ─────────────────────────────────────────────
 # SIDEBAR
 # ─────────────────────────────────────────────
 with st.sidebar:
     st.markdown("### ⚡ EXIT ANALYTICS")
+
+    # ── THEME SWITCHER ──
+    st.markdown("<div style='font-size:10px;font-weight:700;letter-spacing:2px;color:#60a5fa;margin:8px 0 6px 0;'>🎨 THEME</div>", unsafe_allow_html=True)
+    for theme_name in THEMES.keys():
+        is_active = st.session_state["theme"] == theme_name
+        btn_style = "background:#1e4080;border:1px solid #60a5fa;" if is_active else "background:#1e3250;border:1px solid #2a4a7f;"
+        col_btn, = st.columns([1])
+        if st.button(
+            f"{'✅ ' if is_active else ''}{theme_name}",
+            use_container_width=True,
+            key=f"theme_{theme_name}"
+        ):
+            st.session_state["theme"] = theme_name
+            st.rerun()
+
     st.markdown("---")
 
     bh_options = sorted((set(exit_df["Business Head"].dropna()) | set(pipe_df["Business Head"].dropna())) - {"","nan"})
@@ -177,12 +246,31 @@ with st.sidebar:
     st.markdown("<div style='font-size:10px;font-weight:700;letter-spacing:2px;color:#4ade80;margin-bottom:8px;'>📆 CREATED DATE FILTER</div>", unsafe_allow_html=True)
     st.caption("Applies to both Exit & Pipeline")
 
+    qc1, qc2 = st.columns(2)
+    with qc1:
+        if st.button("Today", use_container_width=True):
+            st.session_state["cr_from"] = today
+            st.session_state["cr_to"]   = today
+            st.rerun()
+    with qc2:
+        if st.button("This Week", use_container_width=True):
+            st.session_state["cr_from"] = today - timedelta(days=today.weekday())
+            st.session_state["cr_to"]   = today
+            st.rerun()
+    qc3, qc4 = st.columns(2)
+    with qc3:
+        if st.button("This Month", use_container_width=True):
+            st.session_state["cr_from"] = today.replace(day=1)
+            st.session_state["cr_to"]   = today
+            st.rerun()
+    with qc4:
+        if st.button("All Time", use_container_width=True):
+            st.session_state["cr_from"] = all_min
+            st.session_state["cr_to"]   = all_max
+            st.rerun()
 
-    # Date inputs WITHOUT key= (avoids session state conflict)
     cr_from = st.date_input("From", value=st.session_state["cr_from"], min_value=all_min, max_value=all_max)
     cr_to   = st.date_input("To",   value=st.session_state["cr_to"],   min_value=all_min, max_value=all_max)
-
-    # Keep session state in sync with manual picks
     st.session_state["cr_from"] = cr_from
     st.session_state["cr_to"]   = cr_to
 
@@ -190,10 +278,10 @@ with st.sidebar:
     if st.button("🔄  Refresh Data", use_container_width=True):
         st.cache_data.clear(); st.rerun()
 
-    st.markdown("""<div style="margin-top:1rem;padding:12px 14px;background:#0e1525;border-radius:10px;border:1px solid #1e2d45;">
-        <div style="font-size:10px;color:#334155;letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-bottom:5px;">Data Source</div>
+    st.markdown(f"""<div style="margin-top:1rem;padding:12px 14px;background:{T['app_bg']};border-radius:10px;border:1px solid {T['grid']};">
+        <div style="font-size:10px;color:{T['text_dim']};letter-spacing:2px;text-transform:uppercase;font-weight:600;margin-bottom:5px;">Data Source</div>
         <div style="font-size:11px;color:#60a5fa;font-weight:500;">Exit & Exit Pip.xlsx</div>
-        <div style="font-size:10px;color:#334155;margin-top:3px;">Refreshes every 5 min</div>
+        <div style="font-size:10px;color:{T['text_dim']};margin-top:3px;">Refreshes every 5 min</div>
     </div>""", unsafe_allow_html=True)
 
 # ─────────────────────────────────────────────
@@ -210,7 +298,6 @@ def apply_main(df):
 
 ef = apply_main(exit_df)
 pf = apply_main(pipe_df)
-
 ef_cr = ef[(ef["created_at"].dt.date >= cr_from) & (ef["created_at"].dt.date <= cr_to)]
 pf_cr = pf[(pf["created_at"].dt.date >= cr_from) & (pf["created_at"].dt.date <= cr_to)]
 
@@ -224,12 +311,15 @@ cr_exit_mar = ef_cr["margin"].sum();      cr_pipe_mar = pf_cr["margin"].sum()
 # ─────────────────────────────────────────────
 # PAGE HEADER
 # ─────────────────────────────────────────────
-st.markdown("""<div class="pg-hdr">
+st.markdown(f"""<div class="pg-hdr">
     <div>
         <div class="pg-title">⚡ Exit Analytics Dashboard</div>
         <div class="pg-sub">JoulestoWatts Business Solutions · Workforce Intelligence</div>
     </div>
-    <span class="live-badge">● LIVE</span>
+    <div style="display:flex;align-items:center;gap:12px;">
+        <span style="font-size:11px;color:{T['text_muted']};">Theme: <b style="color:#60a5fa;">{st.session_state['theme']}</b></span>
+        <span class="live-badge">● LIVE</span>
+    </div>
 </div>""", unsafe_allow_html=True)
 
 # ═══ ROW 1 — HEADCOUNT ═══
@@ -299,7 +389,6 @@ st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
 # ═══ CLIENT WISE ═══
 sec("CLIENT WISE ANALYSIS", "#38bdf8")
 client_tab1, client_tab2 = st.tabs(["  🚪 Exit  ", "  🔄 Exit Pipeline  "])
-
 def client_charts(df, label):
     cc1, cc2 = st.columns(2)
     with cc1:
@@ -309,8 +398,7 @@ def client_charts(df, label):
             marker=dict(color="#3b82f6", opacity=0.9, line=dict(width=0)),
             text=top_c[label], textposition="outside",
             textfont=dict(color="#93c5fd", size=11, family="JetBrains Mono")))
-        fig.update_layout(**clayout(f"Top Clients · {label} Count", 390))
-        fig.update_xaxes(showticklabels=False)
+        fig.update_layout(**clayout(f"Top Clients · {label} Count", 390)); fig.update_xaxes(showticklabels=False)
         st.plotly_chart(fig, use_container_width=True, config={"displayModeBar":False})
         st.markdown('</div>', unsafe_allow_html=True)
     with cc2:
@@ -320,18 +408,15 @@ def client_charts(df, label):
             marker=dict(color="#8b5cf6", opacity=0.9, line=dict(width=0)),
             text=[f"₹{v/1e5:.1f}L" for v in top_po_c["PO"]], textposition="outside",
             textfont=dict(color="#c4b5fd", size=11, family="JetBrains Mono")))
-        fig2.update_layout(**clayout(f"Top Clients · {label} P.O Value", 390))
-        fig2.update_xaxes(showticklabels=False)
+        fig2.update_layout(**clayout(f"Top Clients · {label} P.O Value", 390)); fig2.update_xaxes(showticklabels=False)
         st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar":False})
         st.markdown('</div>', unsafe_allow_html=True)
-
 with client_tab1: client_charts(ef, "Exit")
 with client_tab2: client_charts(pf, "Pipeline")
 
 # ═══ BH WISE ═══
 sec("BUSINESS HEAD WISE ANALYSIS", "#34d399")
 bh_tab1, bh_tab2 = st.tabs(["  🚪 Exit  ", "  🔄 Exit Pipeline  "])
-
 def bh_charts(df, label):
     bc1, bc2 = st.columns(2)
     with bc1:
@@ -341,8 +426,7 @@ def bh_charts(df, label):
             marker=dict(color=PALETTE[:len(bh_count)], line=dict(width=0)),
             text=bh_count[label], textposition="outside",
             textfont=dict(color="#e2e8f0", size=11, family="JetBrains Mono")))
-        fig3.update_layout(**clayout(f"{label} by Business Head", 330))
-        fig3.update_xaxes(showticklabels=False)
+        fig3.update_layout(**clayout(f"{label} by Business Head", 330)); fig3.update_xaxes(showticklabels=False)
         st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar":False})
         st.markdown('</div>', unsafe_allow_html=True)
     with bc2:
@@ -352,25 +436,22 @@ def bh_charts(df, label):
             marker=dict(color=PALETTE[:len(bh_po)], line=dict(width=0)),
             text=[f"₹{v/1e5:.1f}L" for v in bh_po["PO"]], textposition="outside",
             textfont=dict(color="#e2e8f0", size=11, family="JetBrains Mono")))
-        fig4.update_layout(**clayout(f"{label} P.O Value by Business Head", 330))
-        fig4.update_xaxes(showticklabels=False)
+        fig4.update_layout(**clayout(f"{label} P.O Value by Business Head", 330)); fig4.update_xaxes(showticklabels=False)
         st.plotly_chart(fig4, use_container_width=True, config={"displayModeBar":False})
         st.markdown('</div>', unsafe_allow_html=True)
-
 with bh_tab1: bh_charts(ef, "Exit")
 with bh_tab2: bh_charts(pf, "Pipeline")
 
 # ═══ DOMAIN WISE ═══
 sec("DOMAIN WISE ANALYSIS", "#fb923c")
 domain_tab1, domain_tab2 = st.tabs(["  🚪 Exit  ", "  🔄 Exit Pipeline  "])
-
 def domain_charts(df, label):
     dc1, dc2, dc3 = st.columns(3)
     with dc1:
         st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
         dom_e = df["Domain"].value_counts().reset_index(); dom_e.columns = ["Domain","Count"]
         fig6 = go.Figure(go.Pie(labels=dom_e["Domain"], values=dom_e["Count"], hole=0.52,
-            marker=dict(colors=PALETTE[:len(dom_e)], line=dict(color="#0e1525", width=3)),
+            marker=dict(colors=PALETTE[:len(dom_e)], line=dict(color=T['app_bg'], width=3)),
             textfont=dict(color="#ffffff", size=12), textinfo="label+percent"))
         fig6.update_layout(**clayout(f"{label} by Domain", 310)); fig6.update_layout(showlegend=False)
         st.plotly_chart(fig6, use_container_width=True, config={"displayModeBar":False})
@@ -395,7 +476,6 @@ def domain_charts(df, label):
         fig8.update_layout(**clayout(f"{label} Margin by Domain", 310)); fig8.update_yaxes(showticklabels=False)
         st.plotly_chart(fig8, use_container_width=True, config={"displayModeBar":False})
         st.markdown('</div>', unsafe_allow_html=True)
-
 with domain_tab1: domain_charts(ef, "Exit")
 with domain_tab2: domain_charts(pf, "Pipeline")
 
@@ -406,7 +486,7 @@ with ec1:
     st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
     et = ef["exit_type"].value_counts().reset_index(); et.columns = ["Type","Count"]
     fig9 = go.Figure(go.Pie(labels=et["Type"], values=et["Count"], hole=0.5,
-        marker=dict(colors=PALETTE[:len(et)], line=dict(color="#0e1525", width=2)),
+        marker=dict(colors=PALETTE[:len(et)], line=dict(color=T['app_bg'], width=2)),
         textfont=dict(color="#ffffff", size=10), textinfo="percent"))
     fig9.update_layout(**clayout("Exit Type · Exits", 330))
     fig9.update_layout(legend=dict(orientation="v", x=1.02, y=0.5, font=dict(color="#cbd5e1",size=9), bgcolor="rgba(0,0,0,0)"))
@@ -417,7 +497,7 @@ with ec2:
     pt = pf["exit_type"].value_counts().reset_index(); pt.columns = ["Type","Count"]
     if not pt.empty:
         fig10 = go.Figure(go.Pie(labels=pt["Type"], values=pt["Count"], hole=0.5,
-            marker=dict(colors=PALETTE[3:3+len(pt)], line=dict(color="#0e1525", width=2)),
+            marker=dict(colors=PALETTE[3:3+len(pt)], line=dict(color=T['app_bg'], width=2)),
             textfont=dict(color="#ffffff", size=10), textinfo="percent"))
         fig10.update_layout(**clayout("Exit Type · Pipeline", 330))
         fig10.update_layout(legend=dict(orientation="v", x=1.02, y=0.5, font=dict(color="#cbd5e1",size=9), bgcolor="rgba(0,0,0,0)"))
@@ -437,11 +517,11 @@ with ec3:
         marker=dict(color="rgba(59,130,246,0.35)", line=dict(color="#60a5fa", width=1.5))), secondary_y=False)
     fig11.add_trace(go.Scatter(x=trend["Month"], y=trend["PO"], name="P.O Value",
         line=dict(color="#34d399", width=2.5), mode="lines+markers",
-        marker=dict(size=8, color="#34d399", line=dict(color="#0e1525", width=2))), secondary_y=True)
+        marker=dict(size=8, color="#34d399", line=dict(color=T['app_bg'], width=2))), secondary_y=True)
     lo = clayout("Monthly Exit Trend", 330)
     lo["legend"] = dict(orientation="h", y=1.06, x=1, xanchor="right", bgcolor="rgba(0,0,0,0)", font=dict(color="#cbd5e1",size=10))
     fig11.update_layout(**lo)
-    fig11.update_yaxes(gridcolor="#1e2d45", tickfont=dict(color="#64748b",size=10), secondary_y=False)
+    fig11.update_yaxes(gridcolor=T['grid'], tickfont=dict(color="#64748b",size=10), secondary_y=False)
     fig11.update_yaxes(gridcolor="rgba(0,0,0,0)", tickfont=dict(color="#64748b",size=10), secondary_y=True)
     st.plotly_chart(fig11, use_container_width=True, config={"displayModeBar":False})
     st.markdown('</div>', unsafe_allow_html=True)
@@ -479,16 +559,11 @@ def show_table(df, col_map, label):
         <div class="tot-item"><div class="tot-label">Unique Clients</div><div class="tot-value purple">{uniq_cli:,}</div></div>
         <div class="tot-item"><div class="tot-label">Unique Domains</div><div class="tot-value">{uniq_dom:,}</div></div>
     </div>""", unsafe_allow_html=True)
-
 with tab1: show_table(ef, EXIT_COLS, "Exits")
 with tab2: show_table(pf, PIPE_COLS, "Pipeline")
 
-# ═══════════════════════════════════════════════════════════
-# LAST ROW — CREATED HC & PO + CLIENT LIST
-# ═══════════════════════════════════════════════════════════
+# ═══ LAST ROW — CREATED HC & PO ═══
 sec(f"CREATED HEADCOUNT & P.O VALUE  ·  {cr_from.strftime('%d %b %Y')} → {cr_to.strftime('%d %b %Y')}", "#4ade80")
-
-# ── 4 KPI cards ──
 k1, k2, k3, k4 = st.columns(4)
 with k1:
     st.markdown(f"""<div class="kpi-cr" style="border-color:#2d5aa0;">
@@ -527,50 +602,36 @@ with k4:
 
 st.markdown("<div style='height:16px'></div>", unsafe_allow_html=True)
 
-# ── Client list tabs ──
 cl_tab1, cl_tab2 = st.tabs(["  🚪 Exit Created — Client List  ", "  🔄 Pipeline Created — Client List  "])
 
-def client_list_view(df_cr, accent):
+def client_list_view(df_cr):
     if df_cr.empty:
         st.info("No records found for the selected date range.")
         return
-
-    # Summary metrics
     m1, m2, m3, m4 = st.columns(4)
     m1.metric("Total HC",       f"{len(df_cr):,}")
     m2.metric("Total P.O",      f"₹{df_cr['p_o_value'].sum():,.0f}")
     m3.metric("Total Margin",   f"₹{df_cr['margin'].sum():,.0f}")
     m4.metric("Unique Clients", f"{df_cr['company_name'].nunique():,}")
-
-    st.markdown("<div style='height:10px'></div>", unsafe_allow_html=True)
-
-    # Build summary dataframe — use Streamlit dataframe (NO raw HTML loop)
+    st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
     summary = (df_cr.groupby("company_name")
-                    .agg(HC=("employee_id","count"),
-                         PO=("p_o_value","sum"),
-                         Margin=("margin","sum"))
-                    .reset_index()
-                    .sort_values("HC", ascending=False)
+                    .agg(HC=("employee_id","count"), PO=("p_o_value","sum"), Margin=("margin","sum"))
+                    .reset_index().sort_values("HC", ascending=False)
                     .rename(columns={"company_name":"Client"}))
-
     summary["P.O Value (₹)"] = summary["PO"].apply(lambda x: f"₹{x:,.0f}")
     summary["Margin (₹)"]    = summary["Margin"].apply(lambda x: f"₹{x:,.0f}")
-
     st.dataframe(
         summary[["Client","HC","P.O Value (₹)","Margin (₹)"]].reset_index(drop=True),
         use_container_width=True,
         height=min(60 + len(summary) * 35, 500)
     )
 
-with cl_tab1:
-    client_list_view(ef_cr, "#60a5fa")
+with cl_tab1: client_list_view(ef_cr)
+with cl_tab2: client_list_view(pf_cr)
 
-with cl_tab2:
-    client_list_view(pf_cr, "#fb923c")
-
-st.markdown("""
-<div style="margin-top:3rem;padding:1rem 0;border-top:1px solid #1e2d45;
+st.markdown(f"""
+<div style="margin-top:3rem;padding:1rem 0;border-top:1px solid {T['grid']};
      display:flex;justify-content:space-between;align-items:center;">
-    <div style="font-size:11px;color:#334155;font-weight:700;letter-spacing:2px;">⚡ JOULESTOWAATTS · EXIT ANALYTICS</div>
-    <div style="font-size:10px;color:#334155;">Auto-refreshes every 5 min · Exit & Exit Pip.xlsx</div>
+    <div style="font-size:11px;color:{T['text_dim']};font-weight:700;letter-spacing:2px;">⚡ JOULESTOWAATTS · EXIT ANALYTICS</div>
+    <div style="font-size:10px;color:{T['text_dim']};">Auto-refreshes every 5 min · Exit & Exit Pip.xlsx</div>
 </div>""", unsafe_allow_html=True)

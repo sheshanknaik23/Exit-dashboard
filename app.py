@@ -27,31 +27,31 @@ THEMES = {
         "grid":         "#1e2d45",
         "plot_bg":      "rgba(0,0,0,0)",
     },
-    "🌿 Forest Dark": {
-        "app_bg":       "#0a1510",
-        "sidebar_bg":   "#0f1f18",
-        "card_bg":      "#122018",
-        "border":       "#1a3828",
-        "sidebar_border":"#1e4030",
-        "input_bg":     "#163024",
-        "text_main":    "#ecfdf5",
-        "text_muted":   "#4b7a5e",
-        "text_dim":     "#2d4a3a",
-        "grid":         "#1a2e22",
-        "plot_bg":      "rgba(0,0,0,0)",
+    "🔴 Crimson Elite": {
+        "app_bg":        "#0f0a0a",
+        "sidebar_bg":    "#1a0f0f",
+        "card_bg":       "#1e1212",
+        "border":        "#3d1a1a",
+        "sidebar_border":"#4a1f1f",
+        "input_bg":      "#2d1515",
+        "text_main":     "#fef2f2",
+        "text_muted":    "#b45454",
+        "text_dim":      "#6b2c2c",
+        "grid":          "#2a1515",
+        "plot_bg":       "rgba(0,0,0,0)",
     },
-    "🌆 Slate Pro": {
-        "app_bg":       "#1a1a2e",
-        "sidebar_bg":   "#16213e",
-        "card_bg":      "#1a2040",
-        "border":       "#2a3060",
-        "sidebar_border":"#2a3060",
-        "input_bg":     "#1e2850",
-        "text_main":    "#e8eaf6",
-        "text_muted":   "#5c6bc0",
-        "text_dim":     "#283593",
-        "grid":         "#1e2440",
-        "plot_bg":      "rgba(0,0,0,0)",
+    "🟣 Royal Violet": {
+        "app_bg":        "#0d0a18",
+        "sidebar_bg":    "#130f22",
+        "card_bg":       "#181228",
+        "border":        "#2e1f52",
+        "sidebar_border":"#3a2560",
+        "input_bg":      "#221840",
+        "text_main":     "#f3f0ff",
+        "text_muted":    "#7c5cbf",
+        "text_dim":      "#3d2a70",
+        "grid":          "#1e1535",
+        "plot_bg":       "rgba(0,0,0,0)",
     },
 }
 
@@ -246,6 +246,28 @@ with st.sidebar:
     st.markdown("<div style='font-size:10px;font-weight:700;letter-spacing:2px;color:#4ade80;margin-bottom:8px;'>📆 CREATED DATE FILTER</div>", unsafe_allow_html=True)
     st.caption("Applies to both Exit & Pipeline")
 
+    qc1, qc2 = st.columns(2)
+    with qc1:
+        if st.button("Today", use_container_width=True):
+            st.session_state["cr_from"] = today
+            st.session_state["cr_to"]   = today
+            st.rerun()
+    with qc2:
+        if st.button("This Week", use_container_width=True):
+            st.session_state["cr_from"] = today - timedelta(days=today.weekday())
+            st.session_state["cr_to"]   = today
+            st.rerun()
+    qc3, qc4 = st.columns(2)
+    with qc3:
+        if st.button("This Month", use_container_width=True):
+            st.session_state["cr_from"] = today.replace(day=1)
+            st.session_state["cr_to"]   = today
+            st.rerun()
+    with qc4:
+        if st.button("All Time", use_container_width=True):
+            st.session_state["cr_from"] = all_min
+            st.session_state["cr_to"]   = all_max
+            st.rerun()
 
     cr_from = st.date_input("From", value=st.session_state["cr_from"], min_value=all_min, max_value=all_max)
     cr_to   = st.date_input("To",   value=st.session_state["cr_to"],   min_value=all_min, max_value=all_max)

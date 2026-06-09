@@ -239,12 +239,39 @@ with st.sidebar:
     exit_type_options = sorted((set(ef_cli["exit_type"].dropna()) | set(pf_cli["exit_type"].dropna())) - {"","nan"})
     exit_type_sel = st.multiselect("🚪  Exit Type", exit_type_options, placeholder="All")
 
-    month_options = sorted((set(ef_cli["Month"].dropna()) | set(pf_cli["Month"].dropna())) - {"","nan"}, key=msort)
+    # ── Month: always use FULL data for options so selection never auto-clears ──
+    month_options = sorted(
+        (set(exit_df["Month"].dropna()) | set(pipe_df["Month"].dropna())) - {"","nan"},
+        key=msort
+    )
     month_sel = st.multiselect("📅  Month", month_options, placeholder="All")
 
     st.markdown("---")
     st.markdown("<div style='font-size:10px;font-weight:700;letter-spacing:2px;color:#4ade80;margin-bottom:8px;'>📆 CREATED DATE FILTER</div>", unsafe_allow_html=True)
     st.caption("Applies to both Exit & Pipeline")
+
+    qc1, qc2 = st.columns(2)
+    with qc1:
+        if st.button("Today", use_container_width=True):
+            st.session_state["cr_from"] = today
+            st.session_state["cr_to"]   = today
+            st.rerun()
+    with qc2:
+        if st.button("This Week", use_container_width=True):
+            st.session_state["cr_from"] = today - timedelta(days=today.weekday())
+            st.session_state["cr_to"]   = today
+            st.rerun()
+    qc3, qc4 = st.columns(2)
+    with qc3:
+        if st.button("This Month", use_container_width=True):
+            st.session_state["cr_from"] = today.replace(day=1)
+            st.session_state["cr_to"]   = today
+            st.rerun()
+    with qc4:
+        if st.button("All Time", use_container_width=True):
+            st.session_state["cr_from"] = all_min
+            st.session_state["cr_to"]   = all_max
+            st.rerun()
 
     cr_from = st.date_input("From", value=st.session_state["cr_from"], min_value=all_min, max_value=all_max)
     cr_to   = st.date_input("To",   value=st.session_state["cr_to"],   min_value=all_min, max_value=all_max)

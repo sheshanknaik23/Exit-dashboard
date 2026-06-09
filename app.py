@@ -590,10 +590,21 @@ def client_list_view(df_cr):
         st.info("No records found for the selected date range.")
         return
     m1, m2, m3, m4 = st.columns(4)
-    m1.metric("Total HC",       f"{len(df_cr):,}")
-    m2.metric("Total P.O",      f"₹{df_cr['p_o_value'].sum():,.0f}")
-    m3.metric("Total Margin",   f"₹{df_cr['margin'].sum():,.0f}")
-    m4.metric("Unique Clients", f"{df_cr['company_name'].nunique():,}")
+
+    def stat_card(col, label, value, color):
+        col.markdown(f"""
+        <div style="background:#1e2d45;border:1px solid #2a4a7f;border-radius:10px;
+             padding:14px 18px;border-top:3px solid {color};">
+            <div style="font-size:10px;font-weight:700;letter-spacing:2px;
+                 text-transform:uppercase;color:#94a3b8;margin-bottom:8px;">{label}</div>
+            <div style="font-family:'JetBrains Mono',monospace;font-size:22px;
+                 font-weight:700;color:#f1f5f9;">{value}</div>
+        </div>""", unsafe_allow_html=True)
+
+    stat_card(m1, "Total HC",       f"{len(df_cr):,}",                          "#60a5fa")
+    stat_card(m2, "Total P.O",      f"₹{df_cr['p_o_value'].sum():,.0f}",        "#34d399")
+    stat_card(m3, "Total Margin",   f"₹{df_cr['margin'].sum():,.0f}",           "#fb923c")
+    stat_card(m4, "Unique Clients", f"{df_cr['company_name'].nunique():,}",      "#a78bfa")
     st.markdown("<div style='height:8px'></div>", unsafe_allow_html=True)
     summary = (df_cr.groupby("company_name")
                     .agg(HC=("employee_id","count"), PO=("p_o_value","sum"), Margin=("margin","sum"))

@@ -165,7 +165,7 @@ def load_data(path):
     for df in [exit_df, pipe_df, org_df]:
         df.columns = df.columns.str.strip()
     org_df["Domain"] = org_df["Domain"].str.strip().str.title()
-    org_slim = org_df[["Client","Domain","Business Head"]].drop_duplicates("Client")
+    org_slim = org_df[["Client","Domain","Business Head","HRBP"]].drop_duplicates("Client")
     exit_df = exit_df.merge(org_slim, left_on="company_name", right_on="Client", how="left", suffixes=("","_org"))
     pipe_df = pipe_df.merge(org_slim, left_on="company_name", right_on="Client", how="left", suffixes=("","_org"))
     for df in [exit_df, pipe_df]:
@@ -175,6 +175,8 @@ def load_data(path):
             df["Business Head"] = df.get("BH", pd.NA)
         if "Domain" not in df.columns:
             df["Domain"] = pd.NA
+        if "HRBP" not in df.columns:
+            df["HRBP"] = pd.NA
         df["employee_type"] = df["employee_type"].map(EMP_TYPE_MAP).fillna(df["employee_type"].astype(str))
         df["p_o_value"] = pd.to_numeric(df["p_o_value"], errors="coerce").fillna(0)
         df["margin"]    = pd.to_numeric(df["margin"],    errors="coerce").fillna(0)
@@ -236,7 +238,12 @@ with st.sidebar:
     def cli_f(df): return df[df["company_name"].isin(client_sel)] if client_sel else df
     ef_cli = cli_f(ef_dom); pf_cli = cli_f(pf_dom)
 
-    exit_type_options = sorted((set(ef_cli["exit_type"].dropna()) | set(pf_cli["exit_type"].dropna())) - {"","nan"})
+    hrbp_options = sorted((set(ef_cli["HRBP"].dropna()) | set(pf_cli["HRBP"].dropna())) - {"","nan"})
+    hrbp_sel = st.multiselect("👔  HRBP", hrbp_options, placeholder="All")
+    def hrbp_f(df): return df[df["HRBP"].isin(hrbp_sel)] if hrbp_sel else df
+    ef_hrbp = hrbp_f(ef_cli); pf_hrbp = hrbp_f(pf_cli)
+
+    exit_type_options = sorted((set(ef_hrbp["exit_type"].dropna()) | set(pf_hrbp["exit_type"].dropna())) - {"","nan"})
     exit_type_sel = st.multiselect("🚪  Exit Type", exit_type_options, placeholder="All")
 
     # ── Month: always use FULL data for options so selection never auto-clears ──
@@ -273,6 +280,7 @@ def apply_main(df):
     if bh_sel:        f = f[f["Business Head"].isin(bh_sel)]
     if domain_sel:    f = f[f["Domain"].isin(domain_sel)]
     if client_sel:    f = f[f["company_name"].isin(client_sel)]
+    if hrbp_sel:      f = f[f["HRBP"].isin(hrbp_sel)]
     if exit_type_sel: f = f[f["exit_type"].isin(exit_type_sel)]
     if month_sel:     f = f[f["Month"].isin(month_sel)]
     return f
@@ -511,12 +519,12 @@ with ec3:
 sec("RAW DATA", "#64748b")
 tab1, tab2 = st.tabs(["  📋  Exit Records  ", "  🔄  Pipeline Records  "])
 EXIT_COLS = {"full_name":"Full Name","employee_id":"Employee ID","employee_type":"Emp Type",
-             "company_name":"Client","Domain":"Domain","Business Head":"Business Head",
+             "company_name":"Client","Domain":"Domain","Business Head":"Business Head","HRBP":"HRBP",
              "exit_type":"Exit Type","last_work_day":"Last Working Day",
              "p_o_value":"P.O Value (₹)","margin":"Margin (₹)",
              "recruiter_name":"Recruiter","manager_name":"Manager","Month":"Month","created_date":"Created Date"}
 PIPE_COLS = {"full_name":"Full Name","employee_id":"Employee ID","employee_type":"Emp Type",
-             "company_name":"Client","Domain":"Domain","Business Head":"Business Head",
+             "company_name":"Client","Domain":"Domain","Business Head":"Business Head","HRBP":"HRBP",
              "exit_type":"Exit Type","tentative_exit_date":"Tentative Exit Date",
              "p_o_value":"P.O Value (₹)","margin":"Margin (₹)",
              "recruiter_name":"Recruiter","manager_name":"Manager","Month":"Month","created_date":"Created Date"}

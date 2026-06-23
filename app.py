@@ -356,7 +356,7 @@ st.markdown(f"""<div class="pg-hdr">
 # ─────────────────────────────────────────────
 # MAIN TABS
 # ─────────────────────────────────────────────
-main_tab1, main_tab2, main_tab3 = st.tabs([
+main_tab1, main_tab2 = st.tabs([
     "  🚪  EXIT DASHBOARD  ",
     "  🎯  ONBOARDING DASHBOARD  "
 ])

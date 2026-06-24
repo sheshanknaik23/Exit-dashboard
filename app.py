@@ -476,7 +476,7 @@ with main_tab1:
                 text=top_c[label], textposition="outside",
                 textfont=dict(color=text_color, size=11, family="JetBrains Mono")))
             fig.update_layout(**clayout(f"Top Clients · {label} Count", 390)); fig.update_xaxes(showticklabels=False)
-            st.plotly_chart(fig, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig, use_container_width=True, config={"displayModeBar":False}, key="chart_1")
             st.markdown('</div>', unsafe_allow_html=True)
         with cc2:
             st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
@@ -486,7 +486,7 @@ with main_tab1:
                 text=[f"₹{v/1e5:.1f}L" for v in top_po["PO"]], textposition="outside",
                 textfont=dict(color="#bae6fd", size=11, family="JetBrains Mono")))
             fig2.update_layout(**clayout(f"Top Clients · {label} P.O Value", 390)); fig2.update_xaxes(showticklabels=False)
-            st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar":False}, key="chart_2")
             st.markdown('</div>', unsafe_allow_html=True)
     with oct1: ob_client_charts(obf, "Onboarding", "#10b981", "#6ee7b7")
     with oct2: ob_client_charts(opf, "Pipeline", "#0ea5e9", "#bae6fd")
@@ -504,7 +504,7 @@ with main_tab1:
                 text=bh_count[label], textposition="outside",
                 textfont=dict(color="#e2e8f0", size=11, family="JetBrains Mono")))
             fig3.update_layout(**clayout(f"{label} by Business Head", 330)); fig3.update_xaxes(showticklabels=False)
-            st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar":False}, key="chart_3")
             st.markdown('</div>', unsafe_allow_html=True)
         with bc2:
             st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
@@ -514,7 +514,7 @@ with main_tab1:
                 text=[f"₹{v/1e5:.1f}L" for v in bh_po["PO"]], textposition="outside",
                 textfont=dict(color="#e2e8f0", size=11, family="JetBrains Mono")))
             fig4.update_layout(**clayout(f"{label} P.O Value by Business Head", 330)); fig4.update_xaxes(showticklabels=False)
-            st.plotly_chart(fig4, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig4, use_container_width=True, config={"displayModeBar":False}, key="chart_4")
             st.markdown('</div>', unsafe_allow_html=True)
     with obt1: ob_bh_charts(obf, "Onboarding")
     with obt2: ob_bh_charts(opf, "Pipeline")
@@ -531,7 +531,7 @@ with main_tab1:
                 marker=dict(colors=PALETTE[:len(dom_e)], line=dict(color=T['app_bg'], width=3)),
                 textfont=dict(color="#ffffff", size=12), textinfo="label+percent"))
             fig6.update_layout(**clayout(f"{label} by Domain", 310)); fig6.update_layout(showlegend=False)
-            st.plotly_chart(fig6, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig6, use_container_width=True, config={"displayModeBar":False}, key="chart_5")
             st.markdown('</div>', unsafe_allow_html=True)
         with dc2:
             st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
@@ -541,7 +541,7 @@ with main_tab1:
                 text=[f"₹{v/1e5:.1f}L" for v in dom_po["PO"]], textposition="outside",
                 textfont=dict(color="#e2e8f0", size=12, family="JetBrains Mono")))
             fig7.update_layout(**clayout(f"{label} P.O Value by Domain", 310)); fig7.update_yaxes(showticklabels=False)
-            st.plotly_chart(fig7, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig7, use_container_width=True, config={"displayModeBar":False}, key="chart_6")
             st.markdown('</div>', unsafe_allow_html=True)
         with dc3:
             st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
@@ -551,7 +551,7 @@ with main_tab1:
                 text=[f"₹{v/1e5:.1f}L" for v in dom_m["Margin"]], textposition="outside",
                 textfont=dict(color="#e2e8f0", size=12, family="JetBrains Mono")))
             fig8.update_layout(**clayout(f"{label} Margin by Domain", 310)); fig8.update_yaxes(showticklabels=False)
-            st.plotly_chart(fig8, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig8, use_container_width=True, config={"displayModeBar":False}, key="chart_7")
             st.markdown('</div>', unsafe_allow_html=True)
     with odt1: ob_domain_charts(obf, "Onboarding")
     with odt2: ob_domain_charts(opf, "Pipeline")
@@ -574,7 +574,7 @@ with main_tab1:
     fig_ot.update_layout(**lo_ot)
     fig_ot.update_yaxes(gridcolor=T['grid'], tickfont=dict(color="#64748b", size=10), secondary_y=False)
     fig_ot.update_yaxes(gridcolor="rgba(0,0,0,0)", tickfont=dict(color="#64748b", size=10), secondary_y=True)
-    st.plotly_chart(fig_ot, use_container_width=True, config={"displayModeBar":False})
+    st.plotly_chart(fig_ot, use_container_width=True, config={"displayModeBar":False}, key="chart_8")
     st.markdown('</div>', unsafe_allow_html=True)
 
     # Onboarding Raw Data
@@ -688,7 +688,7 @@ with main_tab2:
                 text=top_c[label], textposition="outside",
                 textfont=dict(color="#93c5fd", size=11, family="JetBrains Mono")))
             fig.update_layout(**clayout(f"Top Clients · {label} Count", 390)); fig.update_xaxes(showticklabels=False)
-            st.plotly_chart(fig, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig, use_container_width=True, config={"displayModeBar":False}, key="chart_9")
             st.markdown('</div>', unsafe_allow_html=True)
         with cc2:
             st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
@@ -698,7 +698,7 @@ with main_tab2:
                 text=[f"₹{v/1e5:.1f}L" for v in top_po_c["PO"]], textposition="outside",
                 textfont=dict(color="#c4b5fd", size=11, family="JetBrains Mono")))
             fig2.update_layout(**clayout(f"Top Clients · {label} P.O Value", 390)); fig2.update_xaxes(showticklabels=False)
-            st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig2, use_container_width=True, config={"displayModeBar":False}, key="chart_10")
             st.markdown('</div>', unsafe_allow_html=True)
     with client_tab1: client_charts(ef, "Exit")
     with client_tab2: client_charts(pf, "Pipeline")
@@ -716,7 +716,7 @@ with main_tab2:
                 text=bh_count[label], textposition="outside",
                 textfont=dict(color="#e2e8f0", size=11, family="JetBrains Mono")))
             fig3.update_layout(**clayout(f"{label} by Business Head", 330)); fig3.update_xaxes(showticklabels=False)
-            st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig3, use_container_width=True, config={"displayModeBar":False}, key="chart_11")
             st.markdown('</div>', unsafe_allow_html=True)
         with bc2:
             st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
@@ -726,7 +726,7 @@ with main_tab2:
                 text=[f"₹{v/1e5:.1f}L" for v in bh_po["PO"]], textposition="outside",
                 textfont=dict(color="#e2e8f0", size=11, family="JetBrains Mono")))
             fig4.update_layout(**clayout(f"{label} P.O Value by Business Head", 330)); fig4.update_xaxes(showticklabels=False)
-            st.plotly_chart(fig4, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig4, use_container_width=True, config={"displayModeBar":False}, key="chart_12")
             st.markdown('</div>', unsafe_allow_html=True)
     with bh_tab1: bh_charts(ef, "Exit")
     with bh_tab2: bh_charts(pf, "Pipeline")
@@ -743,7 +743,7 @@ with main_tab2:
                 marker=dict(colors=PALETTE[:len(dom_e)], line=dict(color=T['app_bg'], width=3)),
                 textfont=dict(color="#ffffff", size=12), textinfo="label+percent"))
             fig6.update_layout(**clayout(f"{label} by Domain", 310)); fig6.update_layout(showlegend=False)
-            st.plotly_chart(fig6, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig6, use_container_width=True, config={"displayModeBar":False}, key="chart_13")
             st.markdown('</div>', unsafe_allow_html=True)
         with dc2:
             st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
@@ -753,7 +753,7 @@ with main_tab2:
                 text=[f"₹{v/1e5:.1f}L" for v in dom_po["PO"]], textposition="outside",
                 textfont=dict(color="#e2e8f0", size=12, family="JetBrains Mono")))
             fig7.update_layout(**clayout(f"{label} P.O Value by Domain", 310)); fig7.update_yaxes(showticklabels=False)
-            st.plotly_chart(fig7, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig7, use_container_width=True, config={"displayModeBar":False}, key="chart_14")
             st.markdown('</div>', unsafe_allow_html=True)
         with dc3:
             st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
@@ -763,7 +763,7 @@ with main_tab2:
                 text=[f"₹{v/1e5:.1f}L" for v in dom_m["Margin"]], textposition="outside",
                 textfont=dict(color="#e2e8f0", size=12, family="JetBrains Mono")))
             fig8.update_layout(**clayout(f"{label} Margin by Domain", 310)); fig8.update_yaxes(showticklabels=False)
-            st.plotly_chart(fig8, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig8, use_container_width=True, config={"displayModeBar":False}, key="chart_15")
             st.markdown('</div>', unsafe_allow_html=True)
     with domain_tab1: domain_charts(ef, "Exit")
     with domain_tab2: domain_charts(pf, "Pipeline")
@@ -779,7 +779,7 @@ with main_tab2:
             textfont=dict(color="#ffffff", size=10), textinfo="percent"))
         fig9.update_layout(**clayout("Exit Type · Exits", 330))
         fig9.update_layout(legend=dict(orientation="v", x=1.02, y=0.5, font=dict(color="#cbd5e1",size=9), bgcolor="rgba(0,0,0,0)"))
-        st.plotly_chart(fig9, use_container_width=True, config={"displayModeBar":False})
+        st.plotly_chart(fig9, use_container_width=True, config={"displayModeBar":False}, key="chart_16")
         st.markdown('</div>', unsafe_allow_html=True)
     with ec2:
         st.markdown('<div class="chart-wrap">', unsafe_allow_html=True)
@@ -790,7 +790,7 @@ with main_tab2:
                 textfont=dict(color="#ffffff", size=10), textinfo="percent"))
             fig10.update_layout(**clayout("Exit Type · Pipeline", 330))
             fig10.update_layout(legend=dict(orientation="v", x=1.02, y=0.5, font=dict(color="#cbd5e1",size=9), bgcolor="rgba(0,0,0,0)"))
-            st.plotly_chart(fig10, use_container_width=True, config={"displayModeBar":False})
+            st.plotly_chart(fig10, use_container_width=True, config={"displayModeBar":False}, key="chart_17")
         else:
             st.info("No pipeline data.")
         st.markdown('</div>', unsafe_allow_html=True)
@@ -812,7 +812,7 @@ with main_tab2:
         fig11.update_layout(**lo)
         fig11.update_yaxes(gridcolor=T['grid'], tickfont=dict(color="#64748b",size=10), secondary_y=False)
         fig11.update_yaxes(gridcolor="rgba(0,0,0,0)", tickfont=dict(color="#64748b",size=10), secondary_y=True)
-        st.plotly_chart(fig11, use_container_width=True, config={"displayModeBar":False})
+        st.plotly_chart(fig11, use_container_width=True, config={"displayModeBar":False}, key="chart_18")
         st.markdown('</div>', unsafe_allow_html=True)
 
     # Raw Data
